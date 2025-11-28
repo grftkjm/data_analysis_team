@@ -1,0 +1,8 @@
+인증키 1655dc06aef84ff0c1cc03b0153a1474
+
+컴퓨터공학과 : https://www.career.go.kr/cnet/openapi/getOpenApi?apiKey=1655dc06aef84ff0c1cc03b0153a1474&svcType=api&svcCode=MAJOR_VIEW&contentType=json&gubun=univ_list&univSe=univ&subject=100394&perPage=500&majorSeq=569
+컴퓨터과학과 : https://www.career.go.kr/cnet/openapi/getOpenApi?apiKey=1655dc06aef84ff0c1cc03b0153a1474&svcType=api&svcCode=MAJOR_VIEW&contentType=json&gubun=univ_list&univSe=univ&subject=100394&perPage=500&majorSeq=570
+소프트웨어공학과(상명대는 여기있음) : https://www.career.go.kr/cnet/openapi/getOpenApi?apiKey=1655dc06aef84ff0c1cc03b0153a1474&svcType=api&svcCode=MAJOR_VIEW&contentType=json&gubun=univ_list&univSe=univ&subject=100394&perPage=500&majorSeq=290
+
+학과정보(학과코드 보는 용도) : https://www.career.go.kr/cnet/openapi/getOpenApi?apiKey=1655dc06aef84ff0c1cc03b0153a1474&svcType=api&svcCode=MAJOR&contentType=json&gubun=univ_list&univSe=univ&subject=100394&perPage=100
+학과정보에서 학과코드 확인하고 https://www.career.go.kr/cnet/openapi/getOpenApi?apiKey=1655dc06aef84ff0c1cc03b0153a1474&svcType=api&svcCode=MAJOR_VIEW&contentType=json&gubun=univ_list&univSe=univ&subject=100394&perPage=500&majorSeq= 뒤에 학과코드 입력하는 방식으로도 됨.

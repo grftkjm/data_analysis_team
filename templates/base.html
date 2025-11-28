@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>입시 래버리지</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+    <!-- 상단 네비게이션 -->
+    <nav class="navbar">
+        <!-- 좌측 사이트 이름 -->
+        <a class="site-name" href="/">입시 래버리지</a>
+
+        <!-- 우측 버튼 -->
+        <div class="nav-buttons">
+            <a href="/high1" class="nav-btn">고1</a>
+            <a href="/high2" class="nav-btn">고2</a>
+            <a href="/high3" class="nav-btn">고3/N수</a>
+        </div>
+    </nav>
+
+    <!-- 페이지별 내용 -->
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+
+</body>
+</html>

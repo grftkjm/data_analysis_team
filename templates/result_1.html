@@ -1,0 +1,220 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="result-container">
+
+    <!-- --------------------- -->
+    <!-- 왼쪽 : 수시 입결 분석 -->
+    <!-- --------------------- -->
+    <div class="result-column">
+        <h2 class="result-title">수시(학생부 종합 전형) 입결 분석</h2>
+
+        {% if susi %}
+        <table class="cut-table">
+            <thead>
+                <tr>
+                    <th>구분</th>
+                    <th>50% CUT</th>
+                    <th>70% CUT</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>등급/백분위</td>
+                    <td>{{ susi[0].cut50 }}</td>
+                    <td>{{ susi[0].cut70 }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p class="susi-tip">
+            생기부를 알맞게 채우면 등급이 부족하더라도 합격할 수 있어요!
+        </p>
+        {% else %}
+            <p>수시 데이터가 없습니다.</p>
+        {% endif %}
+    </div>
+
+
+    <!-- --------------------- -->
+    <!-- 가운데 : 정시 입결 분석 -->
+    <!-- --------------------- -->
+    <div class="result-column">
+        <h2 class="result-title">정시 입결 분석</h2>
+
+        {% if jungsi %}
+        <table class="cut-table">
+            <thead>
+                <tr>
+                    <th>과목</th>
+                    <th>50% CUT</th>
+                    <th>70% CUT</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>국어</td>
+                    <td>{{ jungsi[0].korean50 }}</td>
+                    <td>{{ jungsi[0].korean70 }}</td>
+                </tr>
+                <tr>
+                    <td>수학</td>
+                    <td>{{ jungsi[0].math50 }}</td>
+                    <td>{{ jungsi[0].math70 }}</td>
+                </tr>
+                <tr>
+                    <td>영어</td>
+                    <td>{{ jungsi[0].english50 }}</td>
+                    <td>{{ jungsi[0].english70 }}</td>
+                </tr>
+                <tr>
+                    <td>탐구</td>
+                    <td>{{ jungsi[0].science50 }}</td>
+                    <td>{{ jungsi[0].science70 }}</td>
+                </tr>
+            </tbody>
+        </table>
+        {% else %}
+            <p>정시 데이터가 없습니다.</p>
+        {% endif %}
+    </div>
+
+
+    <!-- --------------------- -->
+    <!-- 오른쪽 : 버튼 영역 -->
+    <!-- --------------------- -->
+    <div class="result-column">
+        <h2 class="result-title">추가 분석</h2>
+
+        <button id="openModalBtn" class="big-action-btn">
+            생기부 방향성 보기
+        </button>
+
+        <button id="recommendBtn" class="big-action-btn" style="margin-top:15px;">
+            더 높은 입결의 학교 추천받기(학종)
+        </button>
+    </div>
+
+</div>
+
+
+<!-- -------------------------- -->
+<!-- Modal Popup -->
+<!-- -------------------------- -->
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <span id="closeModalBtn" class="modal-close">&times;</span>
+
+        <h2 id="modalTitle" class="result-title" style="text-align:center;">(제목)</h2>
+
+        <div id="modalBody" style="margin-top:20px;"></div>
+    </div>
+</div>
+
+
+<script>
+const modal = document.getElementById("modal");
+const modalBody = document.getElementById("modalBody");
+const modalTitle = document.getElementById("modalTitle");
+
+const openModalBtn = document.getElementById("openModalBtn");
+const recommendBtn = document.getElementById("recommendBtn");
+const closeModalBtn = document.getElementById("closeModalBtn");
+
+
+// ---------------------------
+// 생기부 방향성 보기
+// ---------------------------
+openModalBtn.addEventListener("click", () => {
+    modal.style.display = "flex";
+    modalTitle.innerHTML = "컴퓨터 계열 생기부 방향성";
+
+    fetch("/result_2")
+        .then(res => res.text())
+        .then(html => {
+            modalBody.innerHTML = html;
+            attachCertInsideHandler();
+        });
+});
+
+
+// ---------------------------
+// 더 높은 입결 학교 추천 (학종)
+// ---------------------------
+recommendBtn.addEventListener("click", () => {
+    modal.style.display = "flex";
+    modalTitle.innerHTML = "더 높은 입결의 학교 추천(학종)";
+
+    fetch(`/recommend_hakjong?school={{ school }}&major={{ major }}`)
+        .then(res => res.json())
+        .then(data => {
+            if (data.status !== "ok") {
+                modalBody.innerHTML = "<p>추천 데이터를 불러오지 못했습니다.</p>";
+                return;
+            }
+
+            const list = data.data;
+
+            if (list.length === 0) {
+                modalBody.innerHTML = "<p>현재 학교보다 더 높은 입결의 학교가 없습니다.</p>";
+                return;
+            }
+
+            let html = "<h3>현재보다 더 높은 입결의 대학 중 가장 가까운 3곳</h3><br>";
+
+            list.forEach((item, i) => {
+                html += `
+                    <p><strong>${i+1}위</strong> : ${item.university} (${item.major})</p>
+                    <p style="margin-top:-8px; color:#666;">
+                        학종 50% 컷 : ${item.cut50}  
+                        <br>현재 학교보다 <strong>${item.diff}</strong> 등급 높음
+                    </p>
+                    <br>
+                `;
+            });
+
+            modalBody.innerHTML = html;
+        });
+
+});
+
+
+// ---------------------------
+// 팝업 내부 자격증 버튼 핸들러
+// ---------------------------
+function attachCertInsideHandler() {
+    const certBtn = modalBody.querySelector("#openCertInsideBtn");
+    if (!certBtn) return;
+
+    certBtn.addEventListener("click", () => {
+        modalTitle.innerHTML = "컴퓨터 관련 자격증";
+
+        fetch("/certificates_api")
+            .then(res => res.json())
+            .then(data => {
+                let html = "<p>아래와 같은 자격증을 취득한 후, 생기부에 반영하는 것도 좋아요!</p><br><ul>";
+
+                data.data.forEach(c => {
+                    html += `<li>${c}</li>`;
+                });
+
+                html += "</ul>";
+                modalBody.innerHTML = html;
+            });
+    });
+}
+
+
+// ---------------------------
+// 팝업 닫기
+// ---------------------------
+closeModalBtn.addEventListener("click", () => {
+    modal.style.display = "none";
+});
+
+window.addEventListener("click", e => {
+    if (e.target === modal) modal.style.display = "none";
+});
+</script>
+
+{% endblock %}

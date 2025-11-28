@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="analysis-container">
+
+    <h1 class="analysis-title">입시 분석 시작하기</h1>
+    <p class="analysis-sub">학년을 선택해주세요</p>
+
+    <div class="analysis-grid">
+
+        <!-- 고1 카드 -->
+        <a href="/high1" class="analysis-card">
+            <h2>고1</h2>
+            <p>
+                학생이 희망하는 학교와 학과를 선택하면,
+                해당 학교에 합격하기 위한 최적의 방법을 분석하고<br>
+                그보다 조금 더 윗 단계의 학교까지 분석합니다.
+            </p>
+        </a>
+
+        <!-- 고2 카드 -->
+        <a href="/high2" class="analysis-card">
+            <h2>고2</h2>
+            <p>
+                고1 때 완성한 생기부 및 모의고사,
+                학생이 희망하는 학과를 입력하면<br>
+                현 위치에 맞는 합격 전략과 상향 지원 전략을 분석합니다.
+            </p>
+        </a>
+
+        <!-- 고3/N수 카드 -->
+        <a href="/high3" class="analysis-card">
+            <h2>고3 / N수</h2>
+            <p>
+                고2까지 완성한 생기부를 분석하여 최대한 보수적으로 현 위치를 가늠합니다.<br>
+                현 위치에서 최선의 입시 전략을 분석하고,<br>
+                N수를 고려할 경우의 방향성까지 분석합니다.
+            </p>
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}

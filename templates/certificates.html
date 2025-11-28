@@ -1,0 +1,9 @@
+<div style="margin-bottom:20px; font-size:16px; color:#5e4db2; font-weight:600;">
+    아래와 같은 자격증을 취득한 후, 생기부에 반영하는 것도 좋아요!
+</div>
+
+<ul class="s_list">
+    {% for c in certs %}
+        <li class="s_item" style="margin-bottom:6px;">• {{ c }}</li>
+    {% endfor %}
+</ul>

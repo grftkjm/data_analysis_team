@@ -1,0 +1,18 @@
+<div style="font-size:17px; color:#444; line-height:1.6;">
+
+    <p style="font-weight:700; color:#5e4db2;">
+        현재 선택한 학교보다 더 높은 입결(학종)을 가진 학교 추천 결과입니다.
+    </p>
+
+    {% if rec %}
+    <div style="margin-top:15px;">
+        <strong style="color:#6a5acd;">추천 학교:</strong> {{ rec.university }} <br>
+        <strong>해당 학교 50% 컷:</strong> {{ rec.cut50 }} <br>
+        <strong>현재 학교 50% 컷:</strong> {{ current_cut }} <br>
+        <strong style="color:#d32f2f;">입결 차이:</strong> {{ diff }} 등급<br>
+    </div>
+    {% else %}
+    <p>현재 학교보다 높은 입결의 학교가 없습니다.</p>
+    {% endif %}
+
+</div>

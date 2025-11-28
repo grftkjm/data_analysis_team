@@ -1,0 +1,29 @@
+<div>
+    {% if keyword_info %}
+    <ul class="s_list">
+        {% for word, info in keyword_info.items() %}
+        <li class="s_item" style="margin-bottom:20px;">
+            <strong style="font-size:18px; color:#5e4db2;">
+                • {{ word }}
+            </strong> — {{ info.count }}회 등장
+
+            {% if info.sentences %}
+            <div style="margin-top:8px; padding-left:15px;">
+                {% for s in info.sentences %}
+                <div style="font-size:14px; color:#555; margin-bottom:4px;">
+                    - {{ s }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>관련 문장을 찾지 못했습니다.</p>
+    {% endif %}
+
+    <button id="openCertInsideBtn" class="big-action-btn" style="margin-top:25px;">
+        관련 자격증 보기
+    </button>
+</div>
