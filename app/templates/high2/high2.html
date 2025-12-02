@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block content %}
+
+<form action="/high2_result" method="POST" enctype="multipart/form-data" onsubmit="showLoading()">
+    
+    <h3>1. 목표 대학 선택</h3>
+    <select name="school" id="school-select" required>
+        <option value="">학교 선택</option>
+        {% for school in schools %}
+            <option value="{{ school }}">{{ school }}</option>
+        {% endfor %}
+    </select>
+    <select name="major" id="major-select" required>
+        <option value="">학과 선택</option>
+    </select>
+
+    <hr>
+
+    <h3>2. 성적 입력 (등급)</h3>
+    <div class="score-inputs">
+        <label>국어: <input type="number" name="score_kor" ></label>
+        <br>
+        <label>수학: <input type="number" name="score_math" ></label>
+        <br>
+        <label>영어: <input type="number" name="score_eng"></label>
+        <br>
+        <label>한국사: <input type="number" name="score_hist"></label>
+        <br>
+        <label>탐구(평균): <input type="number" name="score_inq" step="1"></label>
+    </div>
+
+    <hr>
+
+    <h3>3. 생기부 PDF 업로드</h3>
+    <input type="file" name="pdf_file" id="pdf-file" required>
+
+    <br><br>
+    <button type="submit" id="start-btn">분석 시작하기</button>
+</form>
+
+<script>
+    // [기능 1] 학교 선택 시 학과 리스트 갱신 (기존 코드 유지)
+    const majorMap = {{ major_map|tojson }};
+    const schoolSelect = document.getElementById("school-select");
+    const majorSelect = document.getElementById("major-select");
+
+    schoolSelect.addEventListener("change", function () {
+        const school = this.value;
+        majorSelect.innerHTML = "";
+        if (!school) return;
+        
+        const majors = majorMap[school];
+        majors.forEach(m => {
+            const opt = document.createElement("option");
+            opt.value = m;
+            opt.innerText = m;
+            majorSelect.appendChild(opt);
+        });
+    });
+
+    // [기능 2] 버튼 누르면 로딩 메시지 띄우기
+    function showLoading() {
+        document.getElementById('start-btn').style.display = 'none'; // 버튼 숨김
+        document.getElementById('loading-box').style.display = 'block'; // 로딩 표시
+    }
+</script>
+
+{% endblock %}

@@ -86,17 +86,18 @@
     <div class="result-column">
         <h2 class="result-title">추가 분석</h2>
 
+        <!-- 생기부 방향성 팝업 -->
         <button id="openModalBtn" class="big-action-btn">
             생기부 방향성 보기
         </button>
 
+        <!-- 변경된 문구 -->
         <button id="recommendBtn" class="big-action-btn" style="margin-top:15px;">
             더 높은 입결의 학교 추천받기(학종)
         </button>
     </div>
 
 </div>
-
 
 <!-- -------------------------- -->
 <!-- Modal Popup -->
@@ -105,26 +106,23 @@
     <div class="modal-content">
         <span id="closeModalBtn" class="modal-close">&times;</span>
 
-        <h2 id="modalTitle" class="result-title" style="text-align:center;">(제목)</h2>
+        <h2 id="modalTitle" class="result-title" style="text-align:center;">
+            (제목)
+        </h2>
 
         <div id="modalBody" style="margin-top:20px;"></div>
     </div>
 </div>
 
-
 <script>
-const modal = document.getElementById("modal");
-const modalBody = document.getElementById("modalBody");
+const modal      = document.getElementById("modal");
+const modalBody  = document.getElementById("modalBody");
 const modalTitle = document.getElementById("modalTitle");
 
-const openModalBtn = document.getElementById("openModalBtn");
-const recommendBtn = document.getElementById("recommendBtn");
+const openModalBtn  = document.getElementById("openModalBtn");
 const closeModalBtn = document.getElementById("closeModalBtn");
 
-
-// ---------------------------
-// 생기부 방향성 보기
-// ---------------------------
+// 생기부 방향성 보기 눌렀을 때 팝업 열고 내용 로드
 openModalBtn.addEventListener("click", () => {
     modal.style.display = "flex";
     modalTitle.innerHTML = "컴퓨터 계열 생기부 방향성";
@@ -133,11 +131,9 @@ openModalBtn.addEventListener("click", () => {
         .then(res => res.text())
         .then(html => {
             modalBody.innerHTML = html;
-            attachCertInsideHandler();
+            attachCertInsideHandler();   // 버튼(관련 자격증 보기) 이벤트 연결
         });
 });
-
-
 // ---------------------------
 // 더 높은 입결 학교 추천 (학종)
 // ---------------------------
@@ -177,11 +173,7 @@ recommendBtn.addEventListener("click", () => {
         });
 
 });
-
-
-// ---------------------------
-// 팝업 내부 자격증 버튼 핸들러
-// ---------------------------
+// 팝업 안의 자격증 버튼
 function attachCertInsideHandler() {
     const certBtn = modalBody.querySelector("#openCertInsideBtn");
     if (!certBtn) return;
@@ -189,30 +181,19 @@ function attachCertInsideHandler() {
     certBtn.addEventListener("click", () => {
         modalTitle.innerHTML = "컴퓨터 관련 자격증";
 
-        fetch("/certificates_api")
-            .then(res => res.json())
-            .then(data => {
-                let html = "<p>아래와 같은 자격증을 취득한 후, 생기부에 반영하는 것도 좋아요!</p><br><ul>";
-
-                data.data.forEach(c => {
-                    html += `<li>${c}</li>`;
-                });
-
-                html += "</ul>";
+        fetch("/certificates")
+            .then(res => res.text())
+            .then(html => {
                 modalBody.innerHTML = html;
             });
     });
 }
 
-
-// ---------------------------
 // 팝업 닫기
-// ---------------------------
-closeModalBtn.addEventListener("click", () => {
-    modal.style.display = "none";
-});
+closeModalBtn.addEventListener("click", () => modal.style.display = "none");
 
-window.addEventListener("click", e => {
+// 바깥 클릭 시 닫기
+window.addEventListener("click", (e) => {
     if (e.target === modal) modal.style.display = "none";
 });
 </script>
