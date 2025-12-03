@@ -152,6 +152,3 @@ def create_student_from_pdf(file_storage, scores=None):
         if os.path.exists(temp_path):
             os.remove(temp_path)
 
-# ==========================================
-# 5. 분석 함수 (IndexError 수정)
-# ==========================================

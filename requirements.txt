@@ -3,4 +3,3 @@ pip install dotenv
 pip install pandas
 pip install numpy
 pip install google.generativeai
-pip install re
