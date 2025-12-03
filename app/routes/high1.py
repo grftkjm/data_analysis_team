@@ -85,41 +85,6 @@ def result_2():
 
 
 
-# -----------------------------
-#     자격증 API 수집 페이지
-# -----------------------------
-@high1_bp.route('/certificates_api')
-def certificates_api():
-    urls = [
-        "https://www.career.go.kr/cnet/openapi/getOpenApi?apiKey="+os.getenv("HIGH1_API_KEY")+"&svcType=api&svcCode=MAJOR_VIEW&contentType=json&gubun=univ_list&univSe=univ&subject=100394&perPage=500&majorSeq=290",
-        "https://www.career.go.kr/cnet/openapi/getOpenApi?apiKey="+os.getenv("HIGH1_API_KEY")+"&svcType=api&svcCode=MAJOR_VIEW&contentType=json&gubun=univ_list&univSe=univ&subject=100394&perPage=500&majorSeq=570",
-        "https://www.career.go.kr/cnet/openapi/getOpenApi?apiKey="+os.getenv("HIGH1_API_KEY")+"&svcType=api&svcCode=MAJOR_VIEW&contentType=json&gubun=univ_list&univSe=univ&subject=100394&perPage=500&majorSeq=569"
-    ]
-
-    cert_list = set()
-
-    for url in urls:
-        try:
-            data = requests.get(url).json()
-            items = data.get("dataSearch", {}).get("content", [])
-
-            for item in items:
-                q = item.get("qualifications", "")
-                if q:
-                    parts = q.replace("\n", ",").split(",")
-                    for c in parts:
-                        c = c.strip()
-                        if len(c) > 1:
-                            cert_list.add(c)
-
-        except:
-            continue
-
-    # 정렬
-    cert_list = sorted(list(cert_list))
-
-    return jsonify({"status": "ok", "data": cert_list})
-
 
 # -----------------------------
 #     더 높은 학종 입결 추천 (상위 3개)

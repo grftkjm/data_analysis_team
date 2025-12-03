@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, jsonify
 from app.backend import getData
 from app.backend.getStuData import create_student_from_pdf 
-from app.backend.analyze import analyze
+from app.backend import analyze
 
 high2_bp = Blueprint("high2", __name__)
 
@@ -32,5 +32,5 @@ def high2_result():
     student = create_student_from_pdf(uploaded_file)
     susi_row = getData.hakjong_df[(getData.hakjong_df["university"] == school) & (getData.hakjong_df["major"] == major)]
     jungsi_row = getData.jungsi_df[(getData.jungsi_df["university"] == school) & (getData.jungsi_df["major"] == major)]
-    result_data = analyze(student=student, school=school, major=major, jungsi_scores=scores)
+    result_data = high2(student=student, school=school, major=major, jungsi_scores=scores)
     return render_template('high2/high2_result.html', result=result_data)

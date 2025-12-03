@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, jsonify
 from app.backend import getData
 from app.backend.getStuData import create_student_from_pdf
-from app.backend.analyze import analyze
+from app.backend import analyze
 
 high3_bp = Blueprint("high3", __name__)
 

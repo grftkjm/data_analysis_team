@@ -181,13 +181,29 @@ function attachCertInsideHandler() {
     certBtn.addEventListener("click", () => {
         modalTitle.innerHTML = "컴퓨터 관련 자격증";
 
-        fetch("/certificates")
-            .then(res => res.text())
-            .then(html => {
-                modalBody.innerHTML = html;
+        fetch('/certificates')
+         .then(res => res.json())
+         .then(data => {
+            let html = `
+                <div style="margin-bottom:20px; font-size:16px; color:#5e4db2; font-weight:600;">
+                    아래와 같은 자격증을 취득한 후, 생기부에 반영하는 것도 좋아요!
+                </div>
+                <ul class="s_list">
+            `;
+
+            data.data.forEach(cert => {
+                html += `<li class="s_item" style="margin-bottom:6px;">• ${cert}</li>`;
             });
+
+            html += `</ul>`;
+            modalBody.innerHTML = html;
+        })
+        .catch(() => {
+            modalBody.innerHTML = "<p>자격증 데이터를 불러오지 못했습니다.</p>";
+        });
     });
 }
+
 
 // 팝업 닫기
 closeModalBtn.addEventListener("click", () => modal.style.display = "none");

@@ -1,6 +1,6 @@
 import app.backend.getData as getData
 
-def analyze(student, school, major, jungsi_scores=None): # jungsi_scores 안써도 일단 받아둠
+def high2(student, school, major, jungsi_scores=None): # jungsi_scores 안써도 일단 받아둠
     
     susicut_df = getData.susicut_df
     
