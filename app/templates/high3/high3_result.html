@@ -1,0 +1,10 @@
+<h1>현 생기부 기준 입학 가능 대학</h1>
+<h1>{{ result.name }}</h1>
+<p>점수: <p>{{ result["content"] }}</p> 
+</p>
+
+<ul>
+  {% for t in result.tags %}
+    <li>{{ t }}</li>
+  {% endfor %}
+</ul>
