@@ -1,100 +1,286 @@
 {% extends "base.html" %}
 
+
+
 {% block content %}
+
+
 
 
 
 <section class="hero-section">
 
+
+
     <h1 class="main-title">가고 싶은 학교는 높은데<br>성적이 애매하다면?</h1>
+
+
 
     <p style="font-size: 1.2rem; color: #4e5968; margin-bottom: 40px; margin-top: -20px;">
 
+
+
         데이터로 찾는 나만의 합격 전략, 입시 래버리지
+
+
 
     </p>
 
+
+
 </section>
+
+
+
+
 
 
 
 <section class="ai-intro-section">
 
+
+
     <h2 class="ai-title"><span>AI</span>와 <span>입시 전문가</span>의 만남</h2>
+
+
 
    
 
+
+
     <div class="ai-info-card reveal">
 
+
+
         <div class="ai-info-content">
+
+
 
             <h3>객관적인 학생부 경쟁력 확인</h3>
 
+
+
             <p>자체 개발한 최첨단 AI 분석으로<br>나의 현재 경쟁력과 위치를 한눈에 확인해요.</p>
 
+
+
         </div>
+
+
 
         <div style="font-size: 80px;">👩‍💼</div>
 
+
+
     </div>
+
+
+
+
 
 
 
     <div class="ai-info-card reveal">
 
+
+
         <div class="ai-info-content">
+
+
 
             <h3>믿을 수 있는 압도적인 데이터 수</h3>
 
+
+
             <p>실제 합격자 데이터 413,088건과<br>입시 전문가의 철저한 검증으로 완성도를 높였어요.</p>
+
+
 
         </div>
 
+
+
         <div style="font-size: 80px;">📊</div>
 
+
+
     </div>
+
+
+
+
 
 
 
     <div class="ai-info-card reveal">
 
+
+
         <div class="ai-info-content">
+
+
 
             <h3>모의지원 합격예측까지 한번에</h3>
 
+
+
             <p>AI 점수로 종합전형에 모의지원하고<br>나의 경쟁력과 합격 가능성까지 확인하세요.</p>
+
+
 
         </div>
 
+
+
         <div style="font-size: 80px;">🖥️</div>
+
+
 
     </div>
 
+
+
 </section>
+
+
+
+
 
 
 
 <section class="features-section" style="padding-bottom: 150px;">
 
+
+
     <div class="section-header">
+
+
 
         <p>망설이는 시간 대신,<br>정확한 데이터로 분석해드려요</p>
 
+
+
     </div>
+
+
 
     <div class="analysis-grid">
 
+
+
         <div class="analysis-card"><div class="icon">🔍</div><h3>틈새 대학 탐색</h3><p>합격 가능성이 열린 곳을 찾습니다.</p></div>
+
+
 
         <div class="analysis-card"><div class="icon">📈</div><h3>실시간 컷 분석</h3><p>최근 입결로 합격 컷을 예측합니다.</p></div>
 
+
+
         <div class="analysis-card"><div class="icon">📝</div><h3>생기부 진단</h3><p>등급을 뒤집을 핵심 역량을 추출합니다.</p></div>
+
+
 
         <div class="analysis-card"><div class="icon">✨</div><h3>맞춤 상향 지원</h3><p>전략적인 상향 지원을 제안합니다.</p></div>
 
+
+
     </div>
 
+
+
 </section>
+
+
+
+
+
+
+
+<div class="sticky-bottom-bar">
+
+
+
+    <a href="/analysis" class="sticky-btn">입시 분석 바로가기</a>
+
+
+
+</div>
+
+
+
+<div id="loading-overlay" class="loading-overlay">
+
+    <div class="loader-container">
+
+        <div class="purple-dot-loader">
+
+            <div></div>
+
+            <div></div>
+
+            <div></div>
+
+        </div>
+
+        <p class="loading-text">입시 데이터를 분석 중입니다... 조금만 기다려주세요🥺 </p>
+
+    </div>
+
+</div>
+
+
+
+
+
+<script>
+
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+
+
+
+        const observer = new IntersectionObserver((entries) => {
+
+
+
+            entries.forEach((entry) => {
+
+
+
+                if (entry.isIntersecting) {
+
+
+
+                    entry.target.classList.add('reveal');
+
+
+
+                }
+
+
+
+            });
+
+
+
+        }, { threshold: 0.1 });
+
+
+
+
+
+
+
+        document.querySelectorAll('.ai-info-card, .analysis-card').forEach(el => observer.observe(el));
+
+
+
+    });
+
+
+
+</script>
 
 
 
@@ -106,31 +292,85 @@
 
 
 
-<script>
+<style>
 
-    document.addEventListener('DOMContentLoaded', function() {
+/* 메인 페이지에서만 작동하는 스타일 */
 
-        const observer = new IntersectionObserver((entries) => {
+.sticky-bottom-bar {
 
-            entries.forEach((entry) => {
+    position: fixed;
 
-                if (entry.isIntersecting) {
+    bottom: 0;
 
-                    entry.target.classList.add('reveal');
+    left: 0;
 
-                }
+    width: 100%;
 
-            });
+    padding: 20px;
 
-        }, { threshold: 0.1 });
+    background: rgba(255, 255, 255, 0.8);
+
+    backdrop-filter: blur(10px);
+
+    display: flex;
+
+    justify-content: center;
+
+    z-index: 2000;
+
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
+
+    box-sizing: border-box;
+
+}
 
 
 
-        document.querySelectorAll('.ai-info-card, .analysis-card').forEach(el => observer.observe(el));
+.sticky-btn {
 
-    });
+    width: 100%;
 
-</script>
+    max-width: 600px;
+
+    padding: 18px;
+
+    background-color: #3182f6;
+
+    color: white;
+
+    font-size: 1.2rem;
+
+    font-weight: 700;
+
+    text-align: center;
+
+    text-decoration: none;
+
+    border-radius: 16px;
+
+    transition: 0.3s;
+
+    border: none;
+
+    cursor: pointer;
+
+}
+
+
+
+.sticky-btn:hover {
+
+    background-color: #1b64da;
+
+    transform: scale(1.02);
+
+}
+
+</style>
+
+
+
+
 
 
 

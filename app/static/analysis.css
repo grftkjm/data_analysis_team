@@ -37,11 +37,33 @@
 }
 
 .analysis-card-item {
+    text-decoration: none !important;
     flex: 1;
     min-width: 300px;
     max-width: 360px;
     display: flex;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* 부드러운 움직임을 위한 베지어 곡선 */
 }
+
+.analysis-card-item .card-inner h2 {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #191f28 !important; /* 토스 스타일의 아주 진한 회색(검정에 가까움) */
+    margin-bottom: 12px;
+}
+
+.analysis-card-item .card-inner p {
+    font-size: 1rem;
+    color: #4e5968 !important; /* 읽기 편한 중간 회색 */
+    line-height: 1.5;
+}
+
+.analysis-card-item:hover {
+    transform: translateY(-10px); /* 위로 10px 살짝 들림 */
+}
+
+
+
 
 /* ============================= */
 /* 카드 공통 (high1 톤 적용) */

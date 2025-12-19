@@ -5,6 +5,18 @@
 {% endblock %}
 
 {% block content %}
+
+<div id="loading-overlay" class="loading-overlay" style="display: none;">
+    <div class="loader-container">
+        <div class="purple-dot-loader">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        <p class="loading-text">데이터 및 생기부 분석 중입니다... 잠시만 기다려주세요 ! ✨</p>
+    </div>
+</div>
+
 <div class="high2-container">
     <h1 class="high1-title">고2 입시 분석</h1>
     <p class="high1-sub">목표 대학과 성적, 생기부를 등록해주세요</p>
@@ -54,6 +66,7 @@
     const fileNameDisplay = document.getElementById("file-name");
     const startBtn = document.getElementById("start-btn");
     const stickyBtn = document.getElementById("sticky-start-btn");
+    const loadingOverlay = document.getElementById("loading-overlay");
 
     // 학교 선택 시 학과 갱신
     schoolSelect.addEventListener("change", function () {
@@ -76,16 +89,20 @@
     });
 
     // 폼 유효성 검사 및 버튼 활성화
-    form.addEventListener("input", () => {
-        stickyBtn.disabled = !form.checkValidity();
-    });
-
-    stickyBtn.addEventListener("click", () => form.requestSubmit());
-
     form.onsubmit = function() {
-        const text = "데이터 및 PDF 분석 중...";
-        startBtn.innerHTML = text; stickyBtn.innerHTML = text;
-        startBtn.disabled = true; stickyBtn.disabled = true;
+        // 1. 화면 흐림 & 스피너 표시
+        if (loadingOverlay) {
+            loadingOverlay.style.display = "flex";
+        }
+
+        // 2. 버튼 상태 변경
+        const text = "정밀 분석 중...";
+        startBtn.innerHTML = text; 
+        stickyBtn.innerHTML = text;
+        startBtn.disabled = true; 
+        stickyBtn.disabled = true;
+
+        return true;
     };
 </script>
 {% endblock %}
