@@ -2,10 +2,13 @@ from flask import Flask
 from dotenv import load_dotenv
 import os
 
-load_dotenv()  # .env 로드
+load_dotenv()
 
 def create_app():
-    app = Flask(__name__)
+    # static_folder와 template_folder를 명시적으로 지정합니다.
+    app = Flask(__name__, 
+                static_folder='static',    # app/static 폴더를 가리킴
+                template_folder='templates') # app/templates 폴더를 가리킴
 
     from .routes.index import index_bp
     from .routes.high1 import high1_bp

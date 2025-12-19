@@ -2,17 +2,18 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>입시 래버리지</title>
-    <link rel="stylesheet" href="/static/style.css">
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=2.6">
+    
+    {% block extra_css %}{% endblock %}
 </head>
 <body>
 
-    <!-- 상단 네비게이션 -->
     <nav class="navbar">
-        <!-- 좌측 사이트 이름 -->
         <a class="site-name" href="/">입시 래버리지</a>
 
-        <!-- 우측 버튼 -->
         <div class="nav-buttons">
             <a href="/high1" class="nav-btn">고1</a>
             <a href="/high2" class="nav-btn">고2</a>
@@ -20,7 +21,6 @@
         </div>
     </nav>
 
-    <!-- 페이지별 내용 -->
     <div class="content">
         {% block content %}{% endblock %}
     </div>

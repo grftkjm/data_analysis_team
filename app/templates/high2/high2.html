@@ -1,68 +1,91 @@
 {% extends "base.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='high2.css') }}">
+{% endblock %}
+
 {% block content %}
+<div class="high2-container">
+    <h1 class="high1-title">고2 입시 분석</h1>
+    <p class="high1-sub">목표 대학과 성적, 생기부를 등록해주세요</p>
 
-<form action="/high2_result" method="POST" enctype="multipart/form-data" onsubmit="showLoading()">
-    
-    <h3>1. 목표 대학 선택</h3>
-    <select name="school" id="school-select" required>
-        <option value="">학교 선택</option>
-        {% for school in schools %}
-            <option value="{{ school }}">{{ school }}</option>
-        {% endfor %}
-    </select>
-    <select name="major" id="major-select" required>
-        <option value="">학과 선택</option>
-    </select>
+    <form action="/high2_result" method="POST" enctype="multipart/form-data" class="form-card wide" id="analysis-form">
+        <h3 class="section-title">1. 목표 대학</h3>
+        <div class="input-group">
+            <select name="school" id="school-select" class="select-box" required>
+                <option value="">학교 선택</option>
+                {% for school in schools %}
+                    <option value="{{ school }}">{{ school }}</option>
+                {% endfor %}
+            </select>
+            <select name="major" id="major-select" class="select-box" required>
+                <option value="">학과 선택</option>
+            </select>
+        </div>
 
-    <hr>
+        <h3 class="section-title">2. 성적 입력 (등급)</h3>
+        <div class="score-grid">
+            <div class="score-item"><label class="label">국어</label><input type="number" name="score_kor" class="score-input" placeholder="등급" min="1" max="9" required></div>
+            <div class="score-item"><label class="label">수학</label><input type="number" name="score_math" class="score-input" placeholder="등급" min="1" max="9" required></div>
+            <div class="score-item"><label class="label">영어</label><input type="number" name="score_eng" class="score-input" placeholder="등급" min="1" max="9" required></div>
+            <div class="score-item"><label class="label">탐구(평균)</label><input type="number" name="score_inq" class="score-input" placeholder="등급" min="1" max="9" step="0.1" required></div>
+        </div>
 
-    <h3>2. 성적 입력 (등급)</h3>
-    <div class="score-inputs">
-        <label>국어: <input type="number" name="score_kor" ></label>
-        <br>
-        <label>수학: <input type="number" name="score_math" ></label>
-        <br>
-        <label>영어: <input type="number" name="score_eng"></label>
-        <br>
-        <label>한국사: <input type="number" name="score_hist"></label>
-        <br>
-        <label>탐구(평균): <input type="number" name="score_inq" step="1"></label>
-    </div>
+        <h3 class="section-title">3. 생기부 PDF 업로드</h3>
+        <div class="file-upload-wrapper">
+            <span class="file-label-text" id="file-name">파일을 클릭하거나 여기에 드래그하세요 (PDF)</span>
+            <input type="file" name="pdf_file" id="pdf-file" accept=".pdf" required>
+        </div>
 
-    <hr>
+        <button type="submit" id="start-btn" class="submit-btn" style="margin-top: 20px;">분석 시작하기</button>
+    </form>
+</div>
 
-    <h3>3. 생기부 PDF 업로드</h3>
-    <input type="file" name="pdf_file" id="pdf-file" required>
-
-    <br><br>
-    <button type="submit" id="start-btn">분석 시작하기</button>
-</form>
+<div class="sticky-bottom-bar">
+    <button type="button" id="sticky-start-btn" class="sticky-btn" disabled>데이터 분석 시작하기</button>
+</div>
 
 <script>
-    // [기능 1] 학교 선택 시 학과 리스트 갱신 (기존 코드 유지)
     const majorMap = {{ major_map|tojson }};
+    const form = document.getElementById("analysis-form");
     const schoolSelect = document.getElementById("school-select");
     const majorSelect = document.getElementById("major-select");
+    const pdfInput = document.getElementById("pdf-file");
+    const fileNameDisplay = document.getElementById("file-name");
+    const startBtn = document.getElementById("start-btn");
+    const stickyBtn = document.getElementById("sticky-start-btn");
 
+    // 학교 선택 시 학과 갱신
     schoolSelect.addEventListener("change", function () {
         const school = this.value;
-        majorSelect.innerHTML = "";
+        majorSelect.innerHTML = '<option value="">학과 선택</option>';
         if (!school) return;
-        
-        const majors = majorMap[school];
-        majors.forEach(m => {
+        majorMap[school].forEach(m => {
             const opt = document.createElement("option");
-            opt.value = m;
-            opt.innerText = m;
+            opt.value = m; opt.innerText = m;
             majorSelect.appendChild(opt);
         });
     });
 
-    // [기능 2] 버튼 누르면 로딩 메시지 띄우기
-    function showLoading() {
-        document.getElementById('start-btn').style.display = 'none'; // 버튼 숨김
-        document.getElementById('loading-box').style.display = 'block'; // 로딩 표시
-    }
-</script>
+    // 파일 이름 표시
+    pdfInput.addEventListener("change", function() {
+        if (this.files.length > 0) {
+            fileNameDisplay.innerText = "선택됨: " + this.files[0].name;
+            fileNameDisplay.style.color = "#3182f6";
+        }
+    });
 
+    // 폼 유효성 검사 및 버튼 활성화
+    form.addEventListener("input", () => {
+        stickyBtn.disabled = !form.checkValidity();
+    });
+
+    stickyBtn.addEventListener("click", () => form.requestSubmit());
+
+    form.onsubmit = function() {
+        const text = "데이터 및 PDF 분석 중...";
+        startBtn.innerHTML = text; stickyBtn.innerHTML = text;
+        startBtn.disabled = true; stickyBtn.disabled = true;
+    };
+</script>
 {% endblock %}

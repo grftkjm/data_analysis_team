@@ -21,7 +21,7 @@ def high2_result():
             "kor": int(request.form.get("score_kor")),    # 국어
             "math": int(request.form.get("score_math")),  # 수학
             "eng": int(request.form.get("score_eng")),    # 영어
-            "hist": int(request.form.get("score_hist")),  # 한국사
+            #"hist": int(request.form.get("score_hist")),  # 한국사
             "inq": float(request.form.get("score_inq"))   # 탐구(실수형 가능)
         }
     except (ValueError, TypeError):
