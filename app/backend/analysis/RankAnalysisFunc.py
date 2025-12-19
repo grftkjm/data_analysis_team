@@ -2,7 +2,6 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import os
-import getData
 basedir = os.path.dirname(os.path.abspath(__file__))
 studentInfo = pd.read_csv(os.path.join(basedir, "data\\student_info.csv"))
 RanksDf = pd.read_csv(os.path.join(basedir, "data\\grades.csv"))
@@ -105,7 +104,7 @@ def getSusiRank(grade, semester, rankData, stuData, ismean=False):
                 }
     
 def getCumulativeRank(grade, semester, subject):
-    """특정 학년/학기 동안의 누적 성적 평균을 구하는 함수"""
+    """특정 과목에 대한 누적 성적 반환 함수"""
     ranks = []
 
     for g in range(1, grade + 1):
@@ -119,7 +118,6 @@ def getCumulativeRank(grade, semester, subject):
     ranks = ranks[ranks > 0]
 
     return np.mean(ranks) if ranks.size > 0 else np.nan
-
 
 def getRate(PreGrades, PreSemester, PosGrades, PosSemester, subject, show = False) :
     """학년/학기 간의 성적 상승 비율 연산을 쉽게!"""
@@ -190,45 +188,28 @@ def susiAvgTrendGraph(start_grade, start_semester, end_grade, end_semester, subj
     plt.show()
 
 
+def getEachPersonRank(grade, semester, rankData, stuData, ismean=False):
+    """각 과목별로 학생의 등급을 반환하는 함수"""
+    #수시 입학한 학생들의 아이디 가져오기
+    susiIDs = stuData.loc[stuData['is_susi'] == '수시', 'student_id'].to_numpy()
 
-def getEachPersonRank(student_id, grade, semester, rankData):
-    ranks = rankData.loc[
-        (rankData['student_id'] == student_id) &
-        (rankData['grade'] == grade) &
-        (rankData['semester'] == semester),
-        'rank_grade'
-    ].to_numpy()
+    dicOfRanks = {}
+    for i in range(len(susiIDs)):
+        eachRanks = rankData.loc[(rankData['student_id'] == susiIDs[i]) & 
+                              (rankData['grade'] == grade) & 
+                              (rankData['semester'] == semester), 'rank_grade'].to_numpy()
+        clearRanks(eachRanks)
+        if ismean:
+            eachRanks = np.mean(eachRanks)
+        dicOfRanks[i] = eachRanks
 
-    ranks = clearRanks(ranks)
-    ranks = np.array(ranks)
-    ranks = ranks[ranks > 0]
+    return pd.DataFrame(dicOfRanks)
+"""
+maxData = getSusiRank(3,2,ranks, studentInfo)
+x = ['50%', '70%', 'avg', 'max', 'min']
 
-    return np.mean(ranks) if len(ranks) > 0 else None
+y = [10, 20, 15]
 
-
-def compareSusiPos():
-    susiIDs = studentInfo.loc[studentInfo['is_susi'] == '수시', 'student_id'].to_numpy()
-    meanOfEachRanks = []
-
-    for sid in susiIDs:
-        all_semester_means = []
-        for g in range(1,4):
-            for s in range(1,3):
-                m = getEachPersonRank(sid, g, s, RanksDf)
-                if m is not None:
-                    all_semester_means.append(m)
-
-    meanOfEachRanks.append(np.mean(all_semester_means))
-
-    mean_arr = np.array(meanOfEachRanks)
-    mean_arr = mean_arr[~np.isnan(mean_arr)]  # 혹시 모를 결측 제거
-
-    maxData = np.min(mean_arr)
-    minData = np.max(mean_arr)
-
-
-    x = ['50%', '70%', 'avg', 'max', 'min']
-    y = [10, 20, np.mean(mean_arr), maxData, minData]
-
-    plt.bar(x, y)
-    plt.show()
+plt.bar(x, y)
+plt.show()
+"""
