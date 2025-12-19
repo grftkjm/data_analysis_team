@@ -1,77 +1,107 @@
 {% extends "base.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='high1.css') }}">
+{% endblock %}
+
+
 {% block content %}
-
 <div class="high1-container">
-
     <h1 class="high1-title">고1 입시 분석</h1>
     <p class="high1-sub">희망 학교와 학과를 선택해주세요</p>
 
     <div class="form-card">
+        <div class="input-group">
+            <label class="label">학교 선택</label>
+            <select id="school-select" class="select-box">
+                <option value="">학교를 선택하세요</option>
+                {% for s in schools %}
+                    <option value="{{ s }}">{{ s }}</option>
+                {% endfor %}
+            </select>
+        </div>
 
-        <!-- 학교 선택 -->
-        <label class="label">학교 선택</label>
-        <select id="school-select" class="select-box">
-            <option value="">학교를 선택하세요</option>
-            {% for s in schools %}
-                <option value="{{ s }}">{{ s }}</option>
-            {% endfor %}
-        </select>
+        <div id="major-group" class="input-group" style="opacity: 0; transform: translateY(10px); display: none; transition: all 0.4s ease;">
+            <label class="label">학과 선택</label>
+            <select id="major-select" class="select-box">
+                <option value="">학교를 먼저 선택하세요</option>
+            </select>
+        </div>
 
-        <!-- 학과 선택 -->
-        <label class="label">학과 선택</label>
-        <select id="major-select" class="select-box">
-            <option value="">학교를 먼저 선택하세요</option>
-        </select>
-
-        <button id="start-btn" class="submit-btn">분석 시작하기</button>
-
+        <button id="start-btn" class="submit-btn" disabled>분석 시작하기</button>
     </div>
 </div>
 
-<!-- school → major 매핑 전달 -->
+<div class="sticky-bottom-bar">
+    <button id="sticky-start-btn" class="sticky-btn" disabled>입시 분석 시작하기</button>
+</div>
+
 <script>
     const majorMap = {{ major_map|tojson }};
     const schoolSelect = document.getElementById("school-select");
     const majorSelect = document.getElementById("major-select");
+    const majorGroup = document.getElementById("major-group");
     const startBtn = document.getElementById("start-btn");
+    const stickyBtn = document.getElementById("sticky-start-btn");
 
-    // === 학교 선택 시 학과 리스트 갱신 ===
+    // === 학교 선택 시 학과 그룹 등장 ===
     schoolSelect.addEventListener("change", function () {
         const school = this.value;
         majorSelect.innerHTML = "";
 
-        if (!school) {
-            majorSelect.innerHTML = "<option>학교를 먼저 선택하세요</option>";
-            return;
+        if (school) {
+            const majors = majorMap[school];
+            const defaultOpt = document.createElement("option");
+            defaultOpt.value = "";
+            defaultOpt.textContent = "학과를 선택하세요";
+            majorSelect.appendChild(defaultOpt);
+
+            majors.forEach(m => {
+                const opt = document.createElement("option");
+                opt.value = m;
+                opt.textContent = m;
+                majorSelect.appendChild(opt);
+            });
+
+            majorGroup.style.display = "flex";
+            setTimeout(() => {
+                majorGroup.style.opacity = "1";
+                majorGroup.style.transform = "translateY(0)";
+            }, 10);
+        } else {
+            majorGroup.style.opacity = "0";
+            majorGroup.style.transform = "translateY(10px)";
+            setTimeout(() => { majorGroup.style.display = "none"; }, 400);
         }
-
-        const majors = majorMap[school];
-
-        majors.forEach(m => {
-            const opt = document.createElement("option");
-            opt.value = m;
-            opt.textContent = m;
-            majorSelect.appendChild(opt);
-        });
+        checkForm();
     });
 
-    // === 분석 시작하기 버튼 클릭 시 ===
-    startBtn.addEventListener("click", function () {
+    // === 폼 유효성 검사 (중앙 버튼 & 하단 고정 버튼 동시 제어) ===
+    function checkForm() {
+        const isReady = schoolSelect.value && majorSelect.value;
+        startBtn.disabled = !isReady;
+        stickyBtn.disabled = !isReady;
+    }
+
+    majorSelect.addEventListener("change", checkForm);
+
+    // === 분석 실행 함수 (로딩 효과 포함) ===
+    function runAnalysis() {
+        const btnText = "분석 리포트 생성 중...";
+        startBtn.innerHTML = btnText;
+        stickyBtn.innerHTML = btnText;
+        startBtn.disabled = true;
+        stickyBtn.disabled = true;
+        
         const school = schoolSelect.value;
         const major = majorSelect.value;
+        
+        setTimeout(() => {
+            location.href = `/result_1?school=${encodeURIComponent(school)}&major=${encodeURIComponent(major)}`;
+        }, 1000);
+    }
 
-        if (!school) {
-            alert("학교를 선택해주세요.");
-            return;
-        }
-        if (!major) {
-            alert("학과를 선택해주세요.");
-            return;
-        }
-
-        // result_1 페이지로 이동
-        window.location.href = `/result_1?school=${encodeURIComponent(school)}&major=${encodeURIComponent(major)}`;
-    });
+    startBtn.addEventListener("click", runAnalysis);
+    stickyBtn.addEventListener("click", runAnalysis);
 </script>
-
 {% endblock %}

@@ -1,0 +1,187 @@
+/* 고1 페이지 전용 레이아웃 */
+
+.high1-container {
+
+    padding-top: 140px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    min-height: 100vh;
+
+    background-color: #f9fafb;
+
+}
+
+
+
+.high1-title {
+
+    font-size: 2.5rem;
+
+    font-weight: 800;
+
+    color: #191f28;
+
+    margin-bottom: 12px;
+
+}
+
+
+
+.high1-sub {
+
+    font-size: 1.1rem;
+
+    color: #4e5968;
+
+    margin-bottom: 40px;
+
+}
+
+
+
+/* 입력 카드 디자인 */
+
+.form-card {
+
+    width: 100%;
+
+    max-width: 450px;
+
+    background: #ffffff;
+
+    padding: 40px;
+
+    border-radius: 30px;
+
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 24px;
+
+}
+
+
+
+/* 입력 그룹 스타일 */
+
+.input-group {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 12px;
+
+}
+
+
+
+.label {
+
+    font-size: 0.95rem;
+
+    font-weight: 600;
+
+    color: #333d4b;
+
+}
+
+
+
+.select-box {
+
+    width: 100%;
+
+    padding: 16px;
+
+    border-radius: 14px;
+
+    border: 1px solid #e5e8eb;
+
+    background-color: #ffffff;
+
+    font-size: 1rem;
+
+    color: #191f28;
+
+    outline: none;
+
+    transition: all 0.2s ease;
+
+    cursor: pointer;
+
+    appearance: none;
+
+    /* 커스텀 화살표 아이콘 */
+
+    background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%236B7684' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+
+    background-repeat: no-repeat;
+
+    background-position: right 16px center;
+
+}
+
+
+
+.select-box:focus {
+
+    border-color: #3182f6;
+
+    box-shadow: 0 0 0 3px rgba(49, 130, 246, 0.1);
+
+}
+
+
+
+.submit-btn {
+
+    padding: 18px;
+
+    font-size: 1.1rem;
+
+    font-weight: 700;
+
+    background-color: #3182f6;
+
+    color: white;
+
+    border: none;
+
+    border-radius: 16px;
+
+    cursor: pointer;
+
+    transition: all 0.3s ease;
+
+}
+
+
+
+.submit-btn:disabled {
+
+    opacity: 0.5;
+
+    cursor: not-allowed;
+
+}
+
+
+
+.submit-btn:not(:disabled):hover {
+
+    background-color: #1b64da;
+
+    transform: translateY(-2px);
+
+    box-shadow: 0 8px 20px rgba(49, 130, 246, 0.25);
+
+}

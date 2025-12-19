@@ -1,0 +1,230 @@
+@charset "utf-8";
+
+/* ============================= */
+/* 결과 페이지 전체 컨테이너 */
+/* ============================= */
+
+.analysis-container {
+    padding: 160px 20px 100px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.analysis-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #191f28;
+    margin-bottom: 12px;
+    text-align: center;
+}
+
+.analysis-sub {
+    font-size: 1.1rem;
+    color: #4e5968;
+    margin-bottom: 60px;
+    text-align: center;
+}
+
+/* ============================= */
+/* 카드 그리드 */
+/* ============================= */
+
+.analysis-grid {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    flex-wrap: wrap;
+}
+
+.analysis-card-item {
+    flex: 1;
+    min-width: 300px;
+    max-width: 360px;
+    display: flex;
+}
+
+/* ============================= */
+/* 카드 공통 (high1 톤 적용) */
+/* ============================= */
+
+.analysis-card-item .card-inner {
+    width: 100%;
+    background: #ffffff;
+    border-radius: 30px;
+    padding: 40px 32px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
+    border: 1px solid #f2f4f6;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    text-align: left;
+}
+
+.card-tag {
+    display: inline-block;
+    padding: 6px 14px;
+    background-color: #f2f4f6;
+    color: #4e5968;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-bottom: 18px;
+    width: fit-content;
+}
+
+.analysis-card-item h2 {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #191f28;
+    margin-bottom: 24px;
+}
+
+/* ============================= */
+/* 테이블 (수시 / 정시) */
+/* ============================= */
+
+.cut-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 0.95rem;
+}
+
+.cut-table thead th {
+    background: #f9fafb;
+    padding: 14px;
+    font-weight: 700;
+    color: #333d4b;
+    text-align: center;
+    border-bottom: 1px solid #e5e8eb;
+}
+
+.cut-table tbody td {
+    padding: 14px;
+    text-align: center;
+    border-bottom: 1px solid #f2f4f6;
+    color: #191f28;
+}
+
+.cut-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* ============================= */
+/* 수시 설명 문구 */
+/* ============================= */
+
+.susi-tip {
+    margin-top: 18px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #3182f6;
+    line-height: 1.5;
+}
+
+/* ============================= */
+/* 액션 버튼 (high1 버튼 톤) */
+/* ============================= */
+
+.big-action-btn {
+    width: 100%;
+    padding: 16px;
+    margin-top: 12px;
+    font-size: 1rem;
+    font-weight: 700;
+    border-radius: 16px;
+    border: 1px solid #e5e8eb;
+    background-color: #ffffff;
+    color: #191f28;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.big-action-btn:hover {
+    background-color: #f5f7ff;
+    transform: translateY(-2px);
+}
+
+.big-action-btn.primary {
+    background-color: #3182f6;
+    color: white;
+    border: none;
+}
+
+.big-action-btn.primary:hover {
+    background-color: #1b64da;
+}
+
+/* ============================= */
+/* Modal Popup */
+/* ============================= */
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: #ffffff;
+    width: 90%;
+    max-width: 720px;
+    max-height: 80vh;
+    overflow-y: auto;
+    border-radius: 30px;
+    padding: 40px 32px;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    animation: modalFadeIn 0.25s ease;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-close {
+    position: absolute;
+    top: 18px;
+    right: 22px;
+    font-size: 26px;
+    font-weight: 700;
+    cursor: pointer;
+    color: #999;
+}
+
+.modal-close:hover {
+    color: #000;
+}
+
+/* ============================= */
+/* 모바일 대응 */
+/* ============================= */
+
+@media (max-width: 768px) {
+    .analysis-container {
+        padding-top: 120px;
+    }
+
+    .analysis-title {
+        font-size: 2rem;
+    }
+
+    .analysis-grid {
+        gap: 20px;
+    }
+
+    .analysis-card-item {
+        max-width: 100%;
+    }
+}

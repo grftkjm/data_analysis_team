@@ -7,17 +7,12 @@ import google.generativeai as genai
 from google.generativeai.types import HarmCategory, HarmBlockThreshold
 import tempfile
 
-# ==========================================
-# 1. 설정
-# ==========================================
+#변수 설정
 API_KEY =  os.getenv("AI_API_KEY") # 본인 키 사용
 genai.configure(api_key=API_KEY, transport='rest')
-
 MODEL_NAME = "gemini-2.5-flash" 
 
-# ==========================================
-# 2. Student 클래스 정의
-# ==========================================
+#Student 클래스 정의
 class Student:
     def __init__(self, json_data, scores=None):
         # 1. 기본 정보
@@ -53,7 +48,7 @@ class Student:
         self.behavioral_characteristics = pd.DataFrame(behavior_list)
 
         # 6. 모의고사/수능 점수 (입력받은 값)
-        self.junsi_grade =  {
+        self.jungsi_grade =  {
                 "국어": 0,
                 "수학": 0,
                 "영어": 0,
@@ -64,9 +59,7 @@ class Student:
     def __repr__(self):
         return f"<Student: {self.name} ({self.school_name})>"
 
-# ==========================================
-# 3. 데이터 정제 함수
-# ==========================================
+# 데이터 정제 함수
 def clean_json_response(text):
     try:
         match = re.search(r"```json\s*(\{.*?\})\s*```", text, re.DOTALL)
@@ -80,10 +73,7 @@ def clean_json_response(text):
     except:
         return text
 
-# ==========================================
-# 4. Gemini 처리 및 Student 객체 생성
-# ==========================================
-# [수정 1] scores=None 파라미터 추가 필수!
+#Gemini 처리 및 Student 객체 생성
 def create_student_from_pdf(file_storage, scores=None):
     
     original_filename = file_storage.filename
@@ -137,8 +127,7 @@ def create_student_from_pdf(file_storage, scores=None):
 
         cleaned_text = clean_json_response(response.text)
         json_data = json.loads(cleaned_text)
-
-        # [수정 2] scores 전달
+        
         student = Student(json_data, scores=scores)
         print(f" -> 생성 완료: {student.name}")
         
