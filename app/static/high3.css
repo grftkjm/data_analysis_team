@@ -1,78 +1,237 @@
 @charset "utf-8";
 
-/* [공통 스타일] 고3 전용 레이아웃 */
+/* =========================
+   [공통 스타일] 고3 전용 레이아웃
+   ========================= */
 .high3-container {
     padding-top: 140px;
+    padding-bottom: 120px; /* 하단 고정 버튼 공간 */
+    min-height: 100vh;
+
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-height: 100vh;
+
     background-color: #f9fafb;
-    padding-bottom: 120px; /* 하단 고정 버튼 공간 확보 */
 }
 
-.high1-title { font-size: 2.5rem; font-weight: 800; color: #191f28; margin-bottom: 12px; }
-.high1-sub { font-size: 1.1rem; color: #4e5968; margin-bottom: 40px; }
+.high3-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #191f28;
+    margin-bottom: 12px;
+}
 
-/* 흰색 입력 카드 박스 */
+.high3-sub {
+    font-size: 1.1rem;
+    color: #4e5968;
+    margin-bottom: 40px;
+}
+
+/* =========================
+   입력 카드
+   ========================= */
 .form-card {
     width: 100%;
-    max-width: 500px; /* 고3은 좀 더 넓게 설정 */
+    max-width: 900px; /* ⬅ 5칸 한 줄을 위해 확장 */
     background: #ffffff;
     padding: 40px;
     border-radius: 30px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
+
     display: flex;
     flex-direction: column;
-    gap: 28px;
+    gap: 26px;
 }
 
-/* 섹션 구분 타이틀 */
+/* =========================
+   섹션 타이틀
+   ========================= */
 .section-title {
     font-size: 1.15rem;
     font-weight: 700;
     color: #191f28;
-    margin-bottom: 8px;
+
     border-left: 4px solid #3182f6;
     padding-left: 12px;
+    margin-bottom: 6px;
 }
 
-/* 입력 그룹 및 선택창 */
-.input-group { display: flex; flex-direction: column; gap: 12px; }
-.label { font-size: 0.95rem; font-weight: 600; color: #4e5968; margin-bottom: 4px; }
-
-.select-box, .score-input {
-    width: 100%; padding: 16px; border-radius: 14px; border: 1px solid #e5e8eb;
-    background-color: #ffffff; font-size: 1rem; outline: none; transition: 0.2s;
-    box-sizing: border-box;
-}
-
-.select-box:focus, .score-input:focus { border-color: #3182f6; }
-
-/* [고3 전용] 수능 성적 3열 그리드 */
-.score-grid-3 {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+/* =========================
+   선택창
+   ========================= */
+.input-group {
+    display: flex;
+    flex-direction: column;
     gap: 12px;
 }
 
-/* 버튼 디자인 */
-.submit-btn {
-    padding: 18px; font-size: 1.1rem; font-weight: 700; background-color: #3182f6;
-    color: white; border: none; border-radius: 16px; cursor: pointer; transition: 0.3s;
-}
-.submit-btn:disabled { background-color: #e5e8eb; color: #b0b8c1; cursor: not-allowed; }
+.select-box {
+    width: 100%;
+    padding: 16px;
+    border-radius: 14px;
+    border: 1px solid #e5e8eb;
+    background-color: #ffffff;
 
-/* [하단 고정 버튼 바] */
+    font-size: 1rem;
+    outline: none;
+    transition: 0.2s;
+}
+
+.select-box:focus {
+    border-color: #3182f6;
+}
+
+/* =========================
+   성적 입력 (핵심)
+   ========================= */
+
+/* 등급 / 백분위 소제목 */
+.score-sub-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #4e5968;
+    margin: 6px 0 2px;
+}
+
+/* 5칸 한 줄 */
+.score-grid.compact {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+}
+
+/* 각 칸 */
+.score-item {
+    display: flex;
+    flex-direction: column;
+}
+
+/* 라벨 작게 */
+.score-item .label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #6b7684;
+    margin-bottom: 2px;
+}
+
+/* 입력칸 작게 */
+.score-input {
+    height: 36px;
+    padding: 4px 6px;
+
+    font-size: 0.9rem;
+    border-radius: 8px;
+    border: 1px solid #e5e8eb;
+
+    outline: none;
+    transition: 0.2s;
+}
+
+.score-input:focus {
+    border-color: #3182f6;
+}
+
+/* =========================
+   PDF 업로드
+   ========================= */
+.file-upload-wrapper {
+    border: 2px dashed #d1d6db;
+    border-radius: 16px;
+    padding: 24px;
+    text-align: center;
+    cursor: pointer;
+    position: relative;
+}
+
+.file-upload-wrapper input[type="file"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.file-label-text {
+    font-size: 0.95rem;
+    color: #6b7684;
+}
+
+/* =========================
+   버튼
+   ========================= */
+.submit-btn {
+    padding: 18px;
+    font-size: 1.1rem;
+    font-weight: 700;
+
+    background-color: #3182f6;
+    color: white;
+    border: none;
+    border-radius: 16px;
+
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.submit-btn:disabled {
+    background-color: #e5e8eb;
+    color: #b0b8c1;
+    cursor: not-allowed;
+}
+
+/* =========================
+   하단 고정 버튼
+   ========================= */
 .sticky-bottom-bar {
-    position: fixed; bottom: 0; left: 0; width: 100%; padding: 20px;
-    background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px);
-    display: flex; justify-content: center; z-index: 2000;
-    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05); box-sizing: border-box;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+
+    width: 100%;
+    padding: 20px;
+
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+
+    display: flex;
+    justify-content: center;
+
+    z-index: 2000;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
 }
+
 .sticky-btn {
-    width: 100%; max-width: 500px; padding: 18px; background-color: #3182f6;
-    color: white; font-size: 1.1rem; font-weight: 700; border: none; border-radius: 16px;
-    cursor: pointer; transition: 0.3s;
+    width: 100%;
+    max-width: 900px;
+
+    padding: 18px;
+    background-color: #3182f6;
+    color: white;
+
+    font-size: 1.1rem;
+    font-weight: 700;
+
+    border: none;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: 0.3s;
 }
-.sticky-btn:disabled { background-color: #e5e8eb; color: #b0b8c1; cursor: not-allowed; }
+
+.sticky-btn:disabled {
+    background-color: #e5e8eb;
+    color: #b0b8c1;
+    cursor: not-allowed;
+}
+
+/* =========================
+   모바일 대응
+   ========================= */
+@media (max-width: 768px) {
+    .form-card {
+        padding: 28px;
+    }
+
+    .score-grid.compact {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
