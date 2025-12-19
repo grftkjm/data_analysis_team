@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, jsonify
 from app.backend.analysis import getData
-from app.backend.getStuData import create_student_from_pdf 
+from app.backend.analysis.getStuData import create_student_from_pdf 
 from app.backend.analysis.high2_analysis import analyzing
 
 high2_bp = Blueprint("high2", __name__)
