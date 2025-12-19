@@ -2,13 +2,28 @@ import matplotlib
 matplotlib.use('Agg')
 import pandas as pd
 import numpy as np
-from app.backend.analysis.RankAnalysisFunc import clearRanks, getCumulativeRank, getRate
+from app.backend.analysis.RankAnalysisFunc import clearRanks, getRate
 import app.backend.analysis.getData as getData
 from scipy import stats # 통계 분석용
 import matplotlib.pyplot as plt
 import io
 import base64
 from scipy.stats import norm
+from matplotlib import font_manager, rc
+import platform
+
+# 한글 폰트 설정
+if platform.system() == 'Windows':
+    # 윈도우의 경우 맑은 고딕 사용
+    font_path = "C:/Windows/Fonts/malgun.ttf"
+    font_name = font_manager.FontProperties(fname=font_path).get_name()
+    rc('font', family=font_name)
+else:
+    # Mac이나 리눅스(Docker) 환경일 경우 (필요 시)
+    rc('font', family='AppleGothic')
+
+# 마이너스 기호 깨짐 방지
+matplotlib.rcParams['axes.unicode_minus'] = False
 
 def analyze_student_volatility(student_ranks):
     """성적 변동성 분석: 표준편차를 통해 성적의 안정성을 평가"""
