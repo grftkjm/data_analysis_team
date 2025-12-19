@@ -30,6 +30,8 @@ def high2_result():
 
     uploaded_file = request.files['pdf_file']
     student = create_student_from_pdf(uploaded_file)
+    if student is None:
+        return render_template('high2/error.html',message = "생기부 분석에 실패했습니다. 파일 형식을 확인하거나 잠시 후 다시 시도해주세요.")
     susi_row = getData.hakjong_df[(getData.hakjong_df["university"] == school) & (getData.hakjong_df["major"] == major)]
     jungsi_row = getData.jungsi_df[(getData.jungsi_df["university"] == school) & (getData.jungsi_df["major"] == major)]
     result_data = analyzing(student=student, school=school, major=major, jungsi_scores=scores)

@@ -164,8 +164,8 @@ def plot_all_subjects_trend(student):
     국/수/영/과/기타/전체 성적의 학기별 변화를 하나의 그래프로 시각화
     """
     # 1. 분석할 과목군 정의
-    subjects = ["국어", "수학", "영어", "탐구"]
-    colors = ['#FF9999', '#66B2FF', '#99FF99', '#FFCC99'] # 과목별 색상
+    subjects = ["국어", "수학", "영어", "탐구", '전체 성적']
+    colors = ['#FF9999', '#66B2FF', '#99FF99', '#FFCC99', '#000000'] # 과목별 색상
     
     plt.figure(figsize=(12, 7))
     df = student.grades.copy()
@@ -187,6 +187,8 @@ def plot_all_subjects_trend(student):
         elif sub == "탐구":
             sci_k = ['과학', '물리', '화학', '생명', '지구']
             sub_df = df[df['subject'].str.contains('|'.join(sci_k), na=False)]
+        else: # 전체 성적
+            sub_df = df.copy()
 
         # 학기별 평균 계산
         means = []
