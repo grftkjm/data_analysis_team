@@ -15,11 +15,14 @@ def create_app():
     from .routes.high2 import high2_bp
     from .routes.high3 import high3_bp
     from .routes.certificates import certificates_bp
+    from .routes.n_result import n_result_bp
 
     app.register_blueprint(index_bp)
     app.register_blueprint(high1_bp)
     app.register_blueprint(high2_bp)
     app.register_blueprint(high3_bp)
     app.register_blueprint(certificates_bp)
+    app.register_blueprint(n_result_bp)
+
 
     return app

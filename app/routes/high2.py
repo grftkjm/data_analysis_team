@@ -1,8 +1,8 @@
-from flask import Blueprint, render_template, request, jsonify
+from flask import Blueprint, render_template, request, current_app
 from app.backend.analysis import getData
 from app.backend.analysis.getStuData import create_student_from_pdf 
 from app.backend.analysis.high2_analysis import analyzing
-
+from app.backend.analysis import testData
 high2_bp = Blueprint("high2", __name__)
 
 @high2_bp.route('/high2')
@@ -29,10 +29,11 @@ def high2_result():
     
 
     uploaded_file = request.files['pdf_file']
-    student = create_student_from_pdf(uploaded_file)
-    if student is None:
-        return render_template('high2/error.html',message = "생기부 분석에 실패했습니다. 파일 형식을 확인하거나 잠시 후 다시 시도해주세요.")
-    susi_row = getData.hakjong_df[(getData.hakjong_df["university"] == school) & (getData.hakjong_df["major"] == major)]
-    jungsi_row = getData.jungsi_df[(getData.jungsi_df["university"] == school) & (getData.jungsi_df["major"] == major)]
+    if current_app.config.get('testMode'):
+        student = testData.MockStudent()
+    else :
+        student = create_student_from_pdf(uploaded_file)
+        if student is None:
+            return render_template('error.html',message = "생기부 분석에 실패했습니다. 파일 형식을 확인하거나 잠시 후 다시 시도해주세요.")
     result_data = analyzing(student=student, school=school, major=major, jungsi_scores=scores)
     return render_template('high2/high2_result.html', data=result_data)

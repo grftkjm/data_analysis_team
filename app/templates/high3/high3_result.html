@@ -1,10 +1,106 @@
-<h1>현 생기부 기준 입학 가능 대학</h1>
-<h1>{{ result.name }}</h1>
-<p>점수: <p>{{ result["content"] }}</p> 
-</p>
+{% extends "base.html" %}
+{% block content %}
 
-<ul>
-  {% for t in result.tags %}
-    <li>{{ t }}</li>
-  {% endfor %}
-</ul>
+<h1>고3 / N수 입시 분석 결과</h1>
+
+<!-- ============================= -->
+<!-- 입력 성적 요약 (팩트) -->
+<!-- ============================= -->
+<section style="border:2px solid #222; padding:16px; margin:20px 0;">
+  <h2>입력 성적 요약 (분석 기준)</h2>
+
+  <!-- 수시 -->
+  <p>
+    <strong>수시(내신)</strong> :
+    현재 내신 평균
+    <strong>{{ result.susi.naesin_avg }}</strong> 등급
+  </p>
+
+  <!-- 정시 -->
+  <p>
+    <strong>정시(입력 성적)</strong> :
+    {% for k, v in result.jungsi.scores_keep.items() %}
+      {{ k }} {{ v }}{% if not loop.last %}, {% endif %}
+    {% endfor %}
+  </p>
+</section>
+
+<!-- ============================= -->
+<!-- 수시 분석 -->
+<!-- ============================= -->
+<section style="margin-bottom:32px;">
+  <h2>수시 분석</h2>
+
+  <p>
+    예상 내신 평균 (보수적 기준):
+    <strong>{{ result.susi.expected_avg }}</strong>
+  </p>
+
+  <h3>수시 가능 대학 (보수적)</h3>
+  {% if result.susi.possible_list %}
+    <ul>
+      {% for u in result.susi.possible_list %}
+        <li>
+          {{ u.university }} {{ u.major }}
+          (50컷 기준: {{ u.cut50 }})
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>보수적 기준으로 가능한 대학이 없습니다.</p>
+  {% endif %}
+</section>
+
+<!-- ============================= -->
+<!-- 정시 분석 -->
+<!-- ============================= -->
+<section style="margin-bottom:32px;">
+  <h2>정시 분석 (현 성적 기준)</h2>
+
+  {% if result.jungsi.possible_list %}
+    <ul>
+      {% for u in result.jungsi.possible_list %}
+        <li>{{ u.university }} {{ u.major }}</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>현재 정시 성적으로 지원 가능한 대학이 없습니다.</p>
+  {% endif %}
+</section>
+
+<!-- ============================= -->
+<!-- 수시 vs 정시 추천 -->
+<!-- ============================= -->
+<section style="border:2px solid #0066cc; padding:16px; margin-bottom:32px;">
+  <h2>전형 추천 결과</h2>
+
+  <p style="font-size:18px;">
+    👉 <strong>{{ result.recommendation.pick }}</strong> 전형이 더 유리합니다.
+  </p>
+
+  <ul>
+    {% for r in result.recommendation.reasons %}
+      <li>{{ r }}</li>
+    {% endfor %}
+  </ul>
+</section>
+
+<!-- ============================= -->
+<!-- 고3 세특 / 활동 방향 -->
+<!-- ============================= -->
+<section style="border:1px dashed #aaa; padding:14px;">
+  <h2>고3 세특 · 활동 방향성 (간단)</h2>
+  <ul>
+    <li>기존 세특의 주제 일관성 유지 (확장보다는 정제)</li>
+    <li>전공 관련 독서 1~2권 집중 정리</li>
+    <li>보고서·탐구 활동은 “완성도” 위주로 정리</li>
+  </ul>
+</section>
+<form action="{{ url_for('n_result.n_result') }}" method="POST">
+    <input type="hidden" name="eng_grade" value="{{ forRetry.eng_val }}">
+    <input type="hidden" name="inq1_percent" value="{{ forRetry.inq1_val }}">
+    <input type="hidden" name="inq2_percent" value="{{ forRetry.inq2_val }}">
+
+    <button type="submit">혹시 n수 생각이 있는 당신! 여기로 ㄱㄱ</button>
+</form>
+{% endblock %}

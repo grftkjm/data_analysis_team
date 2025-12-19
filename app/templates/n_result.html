@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='n_result.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="n-result-container">
+
+    <h1 class="result-title">N수 정밀 분석 리포트</h1>
+    <p class="result-sub">입력한 성적을 바탕으로 재종 전략을 분석했어요</p>
+
+    <!-- 요약 카드 -->
+    <div class="summary-card">
+        <h3>📌 종합 요약</h3>
+        <p>{{ summary }}</p>
+
+        <div class="summary-metrics">
+            <div class="metric">
+                <span class="label">탐구 평균</span>
+                <span class="value">{{ inq_avg }}</span>
+            </div>
+            <div class="metric">
+                <span class="label">영어 등급</span>
+                <span class="value">{{ eng_grade }}</span>
+            </div>
+            <div class="metric danger">
+                <span class="label">영어 감점</span>
+                <span class="value">-{{ eng_penalty }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 추천 카드 -->
+    <div class="recommend-section">
+        <h3 class="section-title">추천 재종반</h3>
+
+        {% for r in recommends %}
+        <div class="recommend-card {{ r.level }}">
+            <div class="card-header">
+                <span class="academy">{{ r.academy }}</span>
+                <span class="badge">{{ r.label }}</span>
+            </div>
+
+            <div class="card-body">
+                <p class="type">{{ r.type }}</p>
+                <p class="desc">{{ r.desc }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="bottom-actions">
+        <a href="/high3" class="back-btn">다시 분석하기</a>
+    </div>
+
+</div>
+{% endblock %}

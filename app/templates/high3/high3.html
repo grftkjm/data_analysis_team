@@ -5,6 +5,18 @@
 {% endblock %}
 
 {% block content %}
+
+<div id="loading-overlay" class="loading-overlay" style="display: none;">
+    <div class="loader-container">
+        <div class="purple-dot-loader">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        <p class="loading-text">데이터 및 생기부 분석 중입니다... 잠시만 기다려주세요 ! ✨</p>
+    </div>
+</div>
+
 <div class="high3-container">
     <h1 class="high3-title">고3/N수 입시 분석</h1>
     <p class="high3-sub">목표 대학과 성적, 생기부를 등록해주세요</p>
@@ -92,6 +104,7 @@
         <button type="submit" id="start-btn" class="submit-btn">
             분석 시작하기
         </button>
+
     </form>
 </div>
 
