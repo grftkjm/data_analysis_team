@@ -34,4 +34,4 @@ def high2_result():
     susi_row = getData.hakjong_df[(getData.hakjong_df["university"] == school) & (getData.hakjong_df["major"] == major)]
     jungsi_row = getData.jungsi_df[(getData.jungsi_df["university"] == school) & (getData.jungsi_df["major"] == major)]
     result_data = analyzing(student=student, school=school, major=major, jungsi_scores=scores)
-    return render_template('high3/high3_result.html', result=result_data)
+    return render_template('high3/high3_result.html', data=result_data)

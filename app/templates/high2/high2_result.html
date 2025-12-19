@@ -1,10 +1,18 @@
-<h1>현 생기부 기준 입학 가능 대학</h1>
-<h1>{{ result.name }}</h1>
-<p>점수: <p>{{ result["content"] }}</p> 
-</p>
+<div class="report-container">
+    <h1>{{ data.student_info.name }}님의 분석 리포트</h1>
+    
+    <div class="summary-box">
+        <p>평균 등급: <strong>{{ data.score_analysis.average_rank }}</strong></p>
+        <p>성적 변동성: {{ data.score_analysis.volatility }}</p>
+        <p>합격 예상 확률: <span class="prob">{{ data.score_analysis.pass_probability }}%</span></p>
+    </div>
 
-<ul>
-  {% for t in result.tags %}
-    <li>{{ t }}</li>
-  {% endfor %}
-</ul>
+    <h3>합격 확률 시뮬레이션</h3>
+    <img src="data:image/png;base64,{{ data.visual_data.pass_graph }}" alt="합격 분석 그래프">
+    <img src="data:image/png;base64,{{ data.visual_data.trend_graph }}" alt="성적 추이 그래프">
+    
+    <div class="feedback">
+        <h4>전문가 조언</h4>
+        <p>{{ data.feedback }}</p>
+    </div>
+</div>

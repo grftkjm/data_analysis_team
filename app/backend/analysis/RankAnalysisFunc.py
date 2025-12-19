@@ -103,6 +103,21 @@ def getSusiRank(grade, semester, rankData, stuData, ismean=False):
                  "total" : np.mean(clearRanks(susiRanks))
                 }
     
+def getCumulativeRank(grade, semester, subject):
+    """특정 과목에 대한 누적 성적 반환 함수"""
+    ranks = []
+
+    for g in range(1, grade + 1):
+        semester_end = semester if g == grade else 2
+        for s in range(1, semester_end + 1):
+            data = getSusiRank(g, s, RanksDf, studentInfo)
+            if subject in data:
+                ranks.extend(data[subject])
+
+    ranks = np.array(ranks)
+    ranks = ranks[ranks > 0]
+
+    return np.mean(ranks) if ranks.size > 0 else np.nan
 
 def getRate(PreGrades, PreSemester, PosGrades, PosSemester, subject, show = False) :
     """학년/학기 간의 성적 상승 비율 연산을 쉽게!"""
@@ -172,7 +187,6 @@ def susiAvgTrendGraph(start_grade, start_semester, end_grade, end_semester, subj
 
     plt.show()
 
-susiAvgTrendGraph(1,1,3,2,'total')
 
 def getEachPersonRank(grade, semester, rankData, stuData, ismean=False):
     """각 과목별로 학생의 등급을 반환하는 함수"""
@@ -183,14 +197,13 @@ def getEachPersonRank(grade, semester, rankData, stuData, ismean=False):
     for i in range(len(susiIDs)):
         eachRanks = rankData.loc[(rankData['student_id'] == susiIDs[i]) & 
                               (rankData['grade'] == grade) & 
-                              (rankData['semester'] == semester), 'rank_grades'].to_numpy()
+                              (rankData['semester'] == semester), 'rank_grade'].to_numpy()
         clearRanks(eachRanks)
         if ismean:
             eachRanks = np.mean(eachRanks)
         dicOfRanks[i] = eachRanks
 
     return pd.DataFrame(dicOfRanks)
-print(getEachPersonRank(3,2, RanksDf, studentInfo))
 """
 maxData = getSusiRank(3,2,ranks, studentInfo)
 x = ['50%', '70%', 'avg', 'max', 'min']
