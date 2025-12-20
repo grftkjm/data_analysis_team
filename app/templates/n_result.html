@@ -1,58 +1,103 @@
 {% extends "base.html" %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='n_result.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='n.css') }}">
 {% endblock %}
 
 {% block content %}
-<div class="n-result-container">
 
-    <h1 class="result-title">N수 정밀 분석 리포트</h1>
-    <p class="result-sub">입력한 성적을 바탕으로 재종 전략을 분석했어요</p>
+<div class="n-wrap">
 
-    <!-- 요약 카드 -->
-    <div class="summary-card">
-        <h3>📌 종합 요약</h3>
-        <p>{{ summary }}</p>
+  <h1 class="n-title">N수 추천 결과</h1>
 
-        <div class="summary-metrics">
-            <div class="metric">
-                <span class="label">탐구 평균</span>
-                <span class="value">{{ inq_avg }}</span>
-            </div>
-            <div class="metric">
-                <span class="label">영어 등급</span>
-                <span class="value">{{ eng_grade }}</span>
-            </div>
-            <div class="metric danger">
-                <span class="label">영어 감점</span>
-                <span class="value">-{{ eng_penalty }}</span>
-            </div>
-        </div>
+  <!-- =====================
+       성적 요약 카드
+       ===================== -->
+  <div class="summary-card">
+    <h3>📊 현재 성적 요약</h3>
+
+    <div class="summary-grid">
+      <div>
+        <span class="label">영어 등급</span>
+        <span class="value">{{ eng_grade }}등급</span>
+      </div>
+      <div>
+        <span class="label">영어 감점</span>
+        <span class="value">-{{ eng_penalty }}점</span>
+      </div>
+      <div>
+        <span class="label">탐구 평균</span>
+        <span class="value">{{ inq_avg | round(1) }}</span>
+      </div>
     </div>
 
-    <!-- 추천 카드 -->
-    <div class="recommend-section">
-        <h3 class="section-title">추천 재종반</h3>
+    <p class="summary-text">{{ summary }}</p>
+  </div>
 
-        {% for r in recommends %}
-        <div class="recommend-card {{ r.level }}">
-            <div class="card-header">
-                <span class="academy">{{ r.academy }}</span>
-                <span class="badge">{{ r.label }}</span>
-            </div>
-
-            <div class="card-body">
-                <p class="type">{{ r.type }}</p>
-                <p class="desc">{{ r.desc }}</p>
-            </div>
-        </div>
-        {% endfor %}
+  <!-- =====================
+       전략 추천 카드
+       ===================== -->
+  <div class="recommend-list">
+    {% for r in recommends %}
+    <div class="recommend-card {{ r.level }}">
+      <div class="left">
+        <h4>{{ r.type }}</h4>
+        <p>{{ r.desc }}</p>
+      </div>
+      <div class="right">
+        <span class="badge {{ r.level }}">{{ r.label }}</span>
+      </div>
     </div>
-
-    <div class="bottom-actions">
-        <a href="/high3" class="back-btn">다시 분석하기</a>
-    </div>
+    {% endfor %}
+  </div>
 
 </div>
+
+<!-- =====================
+     재수종합학원 리스트
+     ===================== -->
+<div class="list-container">
+
+  <h1 class="page-title">재수종합학원</h1>
+
+  <div class="tab">
+    <span class="active">분석결과</span>
+  </div>
+
+  {% for r in results %}
+  <div class="result-row">
+
+    <!-- 별 아이콘 -->
+    <div class="star">☆</div>
+
+    <!-- 왼쪽 정보 -->
+    <div class="left">
+      <div class="title">
+        {{ r.selection }} / {{ r.track }}
+      </div>
+      <div class="sub">
+        {{ r.academy }}[{{ r.branch }}]
+      </div>
+    </div>
+
+    <!-- 오른쪽 상태 -->
+    <div class="right">
+      <span class="year">작년기준</span>
+
+      {% if r.status == "가능" %}
+        <span class="status can">가능</span>
+      {% elif r.status == "불가" %}
+        <span class="status cant">불가</span>
+      {% elif r.status == "100%장학" %}
+        <span class="status full">100%장학</span>
+      {% elif r.status == "50%장학" %}
+        <span class="status half">50%장학</span>
+      {% endif %}
+    </div>
+
+  </div>
+  {% endfor %}
+
+</div>
+
 {% endblock %}

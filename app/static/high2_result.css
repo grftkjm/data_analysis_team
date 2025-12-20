@@ -1,0 +1,195 @@
+body {
+  background: #f7f8fc;
+  font-family: 'Pretendard', sans-serif;
+}
+
+/* ✅ navbar(고정 상단) 아래로 콘텐츠가 깔리는 문제 방지
+   - 값은 보통 64~80px 사이. 네 base navbar 높이에 맞춰 조절 가능 */
+.report-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 88px 16px 40px; /* ⬅️ 여기(상단) 때문에 제목 잘림 해결 */
+}
+
+/* 제목 */
+.page-title {
+  font-size: 28px;
+  font-weight: 800;
+  margin: 0 0 8px;
+}
+
+.student-meta {
+  color: #555;
+  margin: 0 0 24px;
+}
+
+/* 요약 */
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.summary-item {
+  background: #fff;
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.05);
+}
+
+.summary-item label {
+  font-size: 13px;
+  color: #888;
+}
+
+.summary-item span {
+  display: block;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.prob-value { color: #6a5acd; }
+
+/* 섹션 */
+.section-title {
+  font-size: 20px;
+  font-weight: 800;
+  margin: 40px 0 8px;
+}
+
+.graph-desc {
+  font-size: 14px;
+  color: #555;
+  margin: 0 0 10px;
+}
+
+.green { color: #27ae60; }
+
+/* 그래프 */
+.graph-container {
+  margin-top: 12px;
+  background: #fff;
+  padding: 16px;
+  border-radius: 16px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.05);
+}
+
+.graph-container img {
+  width: 100%;
+  border-radius: 12px;
+  display: block;
+}
+
+/* 대학 표 */
+.possible-table {
+  width: 100%;
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  margin-top: 12px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.05);
+  border-collapse: collapse;
+}
+
+.possible-table th,
+.possible-table td {
+  padding: 14px;
+  border-bottom: 1px solid #eee;
+  vertical-align: top;
+}
+
+.possible-table th {
+  width: 180px;
+  text-align: left;
+}
+
+.possible-table .future { color: #27ae60; }
+
+/* ✅ 키워드 버튼(항상 노출) */
+.keyword-cta {
+  margin: 32px 0 0;
+  text-align: center;
+}
+
+.keyword-cta button {
+  padding: 12px 22px;
+  border-radius: 999px;
+  border: none;
+  background: #6a5acd;
+  color: #fff;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.keyword-cta button:hover {
+  filter: brightness(0.96);
+}
+
+/* 종합 */
+.final-feedback {
+  margin-top: 32px;
+  background: #fff;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.05);
+}
+
+/* 팝업 */
+.popup-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+  padding: 16px;
+}
+
+.popup-content {
+  background: #fff;
+  padding: 22px;
+  border-radius: 18px;
+  width: 100%;
+  max-width: 520px;
+}
+
+.popup-desc {
+  font-size: 14px;
+  color: #555;
+  margin: 8px 0 14px;
+}
+
+.popup-desc.empty {
+  color: #777;
+  line-height: 1.6;
+}
+
+.keyword-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  background: #f4f5fb;
+  border-radius: 10px;
+  margin-bottom: 8px;
+}
+
+.close-btn {
+  margin-top: 14px;
+  width: 100%;
+  padding: 10px;
+  border-radius: 999px;
+  border: none;
+  background: #ddd;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+/* 모바일 */
+@media (max-width: 720px) {
+  .summary-grid { grid-template-columns: 1fr; }
+  .possible-table th { width: 130px; }
+  .report-container { padding-top: 92px; }
+}

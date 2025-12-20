@@ -54,7 +54,7 @@ def analyzing(student, school, major, susi_df, jungsi_df):
 
     kor = jungsi_scores["kor"]
     math = jungsi_scores["math"]
-    eng = jungsi_scores["eng"]
+    eng = jungsi_scores['eng']
     sci_avg = (jungsi_scores["inq1"] + jungsi_scores["inq2"]) / 2
 
     for _, row in jungsi_df.iterrows():

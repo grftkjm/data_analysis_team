@@ -1,96 +1,163 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ data.student_info.name }}님의 입시 분석 리포트</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='high2_result.css') }}">
+{% endblock %}
+
+{% block content %}
 
 <div class="report-container">
-    <h1>분석 리포트</h1>
-    <div class="student-meta">
-        {{ data.student_info.school }} | {{ data.student_info.major }} 지원 희망 | <strong>{{ data.student_info.name }}</strong> 학생
+
+  <h1 class="page-title">분석 리포트</h1>
+
+  <div class="student-meta">
+    {{ data.student_info.school }} · {{ data.student_info.major }} 지원 희망 ·
+    <strong>{{ data.student_info.name }}</strong> 학생
+  </div>
+
+  <!-- =====================
+       요약
+       ===================== -->
+  <div class="summary-grid">
+    <div class="summary-item">
+      <label>수시 평균 등급</label>
+      <span>{{ data.score_analysis.average_rank }}</span>
     </div>
-    
-    <div class="summary-grid">
-        <div class="summary-item">
-            <label>수시 평균 등급</label>
-            <span>{{ data.score_analysis.average_rank }}</span>
-        </div>
-        <div class="summary-item">
-            <label>성적 변동성 :</label>
-            <span>{{ data.score_analysis.volatility }}</span>
-        </div>
-        <div class="summary-item">
-            <label>합격 예상 확률</label>
-            <span class="prob-value">{{ data.score_analysis.pass_probability }}%</span>
-        </div>
+    <div class="summary-item">
+      <label>성적 변동성</label>
+      <span>{{ data.score_analysis.volatility }}</span>
     </div>
-
-    <div class="section-title">합격 확률 시뮬레이션</div>
-    <p class="graph-desc">대학별 50%, 70% 컷을 바탕으로 합격자 성적 분포(확률밀도함수)를 산출한 결과입니다. <b>초록색 영역</b>이 내 점수로 합격 가능한 구간입니다.</p>
-    <div class="graph-container">
-        <img src="data:image/png;base64,{{ data.visual_data.pass_graph }}" alt="합격 확률 시뮬레이션">
+    <div class="summary-item">
+      <label>합격 예상 확률</label>
+      <span class="prob-value">{{ data.score_analysis.pass_probability }}%</span>
     </div>
+  </div>
 
-    <div class="section-title">전과목 성적 추이 분석</div>
-    <p class="graph-desc">학년/학기별 성적 흐름을 통해 과목별 강점과 안정성을 분석합니다.</p>
-    <div class="graph-container">
-        <img src="data:image/png;base64,{{ data.visual_data.trend_graph }}" alt="성적 추이 그래프">
-    </div>
+  <!-- =====================
+       합격 확률
+       ===================== -->
+  <h2 class="section-title">📈 합격 확률 시뮬레이션</h2>
+  <p class="graph-desc">
+    대학별 50%, 70% 컷을 바탕으로 합격자 성적 분포를 산출한 결과입니다.
+    <b class="green">초록색 영역</b>이 합격 가능 구간입니다.
+  </p>
 
-    <div class="section-title"> 지원 가능 대학 리스트</div>
-    <div class="summary-box" style="background: white; border: 1px solid #eee;">
-        <table class="possible-table">
-            <thead>
-                <tr>
-                    <th>분류</th>
-                    <th>해당 대학교</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>현재 지원 가능</td>
-                    <td>{{ data.PossibleSchools.current | join(', ') }}</td>
-                </tr>
-                <tr>
-                    <td style="color: #27ae60;">성적 상승 시 가능</td>
-                    <td>{{ data.PossibleSchools.future | join(', ') }}</td>
-                </tr>
-                
-            </tbody>
-        </table>
-        <div>
-            
-            {% if data.possibleStrategy %}
-            <h4>세특 작성 전략</h4>
-                <h5> {{ data.student_info.name }}님 보다 성적이 낮지만 {{ data.targetschool}} 에 합격한 학생들의 생기부에는 {{ data.student_info.name }}님 생기부에 없는 아래 키워드가 있어요!</h5>
-                {% for k, info in data.possibleStrategy.items() %}
-                <p>
-                    {{ k }} :
-                    평균 {{ info.avg }}회 /
-                    내 생기부 {{ info.student }}회 →
-                    {% if info.diff > 0 %}
-                        평균보다 {{ info.diff }}회 더 등장
-                    {% elif info.diff < 0 %}
-                        평균보다 {{ info.diff | abs }}회 덜 등장
-                    {% else %}
-                        평균과 동일
-                    {% endif %}
-                </p>
-                {% endfor %}
-            {% endif %}
+  <div class="graph-container">
+    <img src="data:image/png;base64,{{ data.visual_data.pass_graph }}" alt="합격 확률 시뮬레이션">
+  </div>
 
+  <!-- =====================
+       성적 추이
+       ===================== -->
+  <h2 class="section-title">📉 전과목 성적 추이 분석</h2>
+  <p class="graph-desc">
+    학년·학기별 성적 흐름을 통해 과목별 강점과 안정성을 분석합니다.
+  </p>
 
+  <div class="graph-container">
+    <img src="data:image/png;base64,{{ data.visual_data.trend_graph }}" alt="성적 추이 그래프">
+  </div>
 
-        </div>
-    </div>
+  <!-- =====================
+       지원 가능 대학
+       ===================== -->
+  <h2 class="section-title">🏫 지원 가능 대학 리스트</h2>
 
-    <div class="final-feedback">
-        <h4>🔍 종합 분석 결과</h4>
-        <p>{{ data.feedback }}</p>
-    </div>
+  <table class="possible-table">
+    <tr>
+      <th>현재 지원 가능</th>
+      <td>{{ data.PossibleSchools.current | join(', ') }}</td>
+    </tr>
+    <tr>
+      <th class="future">성적 상승 시 가능</th>
+      <td>{{ data.PossibleSchools.future | join(', ') }}</td>
+    </tr>
+  </table>
+
+  <!-- =====================
+       ✅ 버튼은 항상 노출
+       ===================== -->
+  <div class="keyword-cta">
+    <button type="button" onclick="openKeywordPopup()">
+      📌 생기부 키워드 추천 보기
+    </button>
+  </div>
+
+  <!-- =====================
+       종합 분석
+       ===================== -->
+  <div class="final-feedback">
+    <h4>🔍 종합 분석 결과</h4>
+    <p>{{ data.feedback }}</p>
+  </div>
+
 </div>
 
-</body>
-</html>
+<!-- =====================
+     세특 키워드 팝업 (데이터 유무에 따라 내용 분기)
+     ===================== -->
+<div id="keywordPopup" class="popup-overlay" aria-hidden="true">
+  <div class="popup-content" role="dialog" aria-modal="true">
+    <h3>📌 생기부 키워드 추천</h3>
+
+    {% if data.possibleStrategy %}
+      <p class="popup-desc">
+        {{ data.student_info.name }}님보다 성적이 낮지만
+        <strong>{{ data.targetschool }}</strong>에 합격한 학생들의 생기부에
+        더 자주 등장한 키워드입니다.
+      </p>
+
+      {% for k, info in data.possibleStrategy.items() %}
+      <div class="keyword-row">
+        <strong>{{ k }}</strong>
+        <span>
+          평균 {{ info.avg }}회 /
+          내 생기부 {{ info.student }}회 →
+          {% if info.diff > 0 %}
+            평균보다 {{ info.diff }}회 더 등장
+          {% elif info.diff < 0 %}
+            평균보다 {{ info.diff | abs }}회 덜 등장
+          {% else %}
+            평균과 동일
+          {% endif %}
+        </span>
+      </div>
+      {% endfor %}
+    {% else %}
+      <p class="popup-desc empty">
+        현재 조건에서는 비교 가능한 합격자 생기부 데이터가 없어
+        키워드 추천을 생성하지 못했습니다.
+      </p>
+    {% endif %}
+
+    <button class="close-btn" type="button" onclick="closeKeywordPopup()">닫기</button>
+  </div>
+</div>
+
+<script>
+function openKeywordPopup() {
+  const el = document.getElementById("keywordPopup");
+  el.style.display = "flex";
+  el.setAttribute("aria-hidden", "false");
+}
+
+function closeKeywordPopup() {
+  const el = document.getElementById("keywordPopup");
+  el.style.display = "none";
+  el.setAttribute("aria-hidden", "true");
+}
+
+// 오버레이 클릭 시 닫기
+document.addEventListener("click", function(e) {
+  const overlay = document.getElementById("keywordPopup");
+  if (!overlay) return;
+  if (e.target === overlay) closeKeywordPopup();
+});
+
+// ESC로 닫기
+document.addEventListener("keydown", function(e) {
+  if (e.key === "Escape") closeKeywordPopup();
+});
+</script>
+
+{% endblock %}

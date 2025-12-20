@@ -279,3 +279,8 @@
 
 .purple-dot-loader div:nth-child(2) { animation-delay: 0.3s; }
 .purple-dot-loader div:nth-child(3) { animation-delay: 0.6s; }
+
+@keyframes bounce-purple {
+    0% { transform: translateY(0); background-color: #d1c4e9; }
+    100% { transform: translateY(-20px); background-color: #673ab7; }
+}
