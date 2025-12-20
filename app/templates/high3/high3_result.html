@@ -16,24 +16,13 @@
   <section class="card">
     <h2 class="card-title">📊 입력 성적 요약 (분석 기준)</h2>
 
-<<<<<<< HEAD
     <div class="summary-grid">
       <!-- 수시 -->
       <div>
         <span class="label">수시(내신)</span>
         <span class="value">{{ result.susi.naesin_avg }} 등급</span>
       </div>
-=======
-  <!-- 정시 -->
-  <p>
-    <strong>정시(입력 성적)</strong> :
-    국어 :
-    {% for k, v in result.jungsi.scores_keep.items() %}
-      {{ k }} {{ v }}{% if not loop.last %}, {% endif %}
-    {% endfor %}
-  </p>
-</section>
->>>>>>> ddc3705df1d2eaf96ba2775cc4bf733a6de189bc
+
 
       <!-- 정시 -->
       <div>
@@ -151,33 +140,9 @@
   <input type="hidden" name="inq1_percent" value="{{ forRetry.inq1_val_percent }}">
   <input type="hidden" name="inq2_percent" value="{{ forRetry.inq2_val_percent }}">
 
-<<<<<<< HEAD
   <button type="submit" class="cta-btn">
     혹시 N수 생각이 있다면? 👉 N수 전략 보기
   </button>
-=======
-<!-- ============================= -->
-<!-- 고3 세특 / 활동 방향 -->
-<!-- ============================= -->
-<section style="border:1px dashed #aaa; padding:14px;">
-  <h2>고3 세특 · 활동 방향성 (간단)</h2>
-  <ul>
-    <li>기존 세특의 주제 일관성 유지 (확장보다는 정제)</li>
-    <li>전공 관련 독서 1~2권 집중 정리</li>
-    <li>보고서·탐구 활동은 “완성도” 위주로 정리</li>
-  </ul>
-</section>
-<form action="{{ url_for('n_result.n_result') }}" method="POST">
-    <input type="hidden" name="kor_grade" value="{{ forRetry.kor_val }}">
-    <input type="hidden" name="math_grade" value="{{ forRetry.math_val }}">
-    <input type="hidden" name="eng_grade" value="{{ forRetry.eng_val }}">
-    <input type="hidden" name="inq1_grade" value="{{ forRetry.inq1_val }}">
-    <input type="hidden" name="inq2_grade" value="{{ forRetry.inq2_val }}">
-    <input type="hidden" name="inq1_percent" value="{{ forRetry.inq1_val_percent }}">
-    <input type="hidden" name="inq2_percent" value="{{ forRetry.inq2_val_percent }}">
-
-    <button type="submit">혹시 n수 생각이 있는 당신! 여기로 ㄱㄱ</button>
->>>>>>> ddc3705df1d2eaf96ba2775cc4bf733a6de189bc
 </form>
 
 {% endblock %}
