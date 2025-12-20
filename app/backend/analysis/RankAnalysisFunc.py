@@ -7,29 +7,41 @@ studentInfo = pd.read_csv(os.path.join(basedir, "data\\student_info.csv"))
 RanksDf = pd.read_csv(os.path.join(basedir, "data\\grades.csv"))
 
 def clearRanks(ranks):
-    """성적 배열을 수치화 하는 함수(nan은 제외, A=1, B=2 ....)"""
-    for i in range(len(ranks)):
-        #절대 평가 등급 환산
-        if type(ranks[i]) == str:
-            if ranks[i] == 'A':
-                ranks[i] = 1
-            elif ranks[i] == 'B':
-                ranks[i] = 2
-            elif ranks[i] == 'C':
-                ranks[i] = 3
-            elif ranks[i] == 'D':
-                ranks[i] = 4
-            #정수 자료형으로 변환
-            else :
-                try:
-                    ranks[i] = int(ranks[i])
-                except:
-                    ranks[i] = 0
-        #nan 예외 처리
-        if np.isnan(ranks[i]):
-            ranks[i] = 0
+    """
+    성적 배열을 수치화하는 함수
+    - NaN → 0
+    - A=1, B=2, C=3, D=4
+    - 숫자 문자열 → int
+    - 변환 불가 → 0
+    """
+    grade_map = {'A': 1, 'B': 2, 'C': 3, 'D': 4}
+    result = []
 
-    return ranks
+    for val in ranks:
+        # NaN 처리
+        if pd.isna(val):
+            result.append(0)
+            continue
+
+        # 문자열 처리
+        if isinstance(val, str):
+            val = val.strip().upper()
+            if val in grade_map:
+                result.append(grade_map[val])
+                continue
+            try:
+                result.append(int(val))
+            except ValueError:
+                result.append(0)
+                continue
+
+        # 숫자 처리
+        try:
+            result.append(int(val))
+        except (TypeError, ValueError):
+            result.append(0)
+
+    return np.array(result)
 
 def getRank(grade, semester, dataframe):
     """수시/정시 관계없어 성적 가져오는 함수"""
