@@ -1,21 +1,30 @@
 {% extends "base.html" %}
-
+{% block content %}
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='n.css') }}">
 {% endblock %}
 
+<<<<<<< HEAD
 {% block content %}
+=======
+>>>>>>> ddc3705df1d2eaf96ba2775cc4bf733a6de189bc
 
 <div class="n-wrap">
 
   <h1 class="n-title">N수 추천 결과</h1>
 
+<<<<<<< HEAD
   <!-- =====================
        성적 요약 카드
        ===================== -->
   <div class="summary-card">
     <h3>📊 현재 성적 요약</h3>
 
+=======
+  <!-- 요약 카드 -->
+  <div class="summary-card">
+    <h3>📊 현재 성적 요약</h3>
+>>>>>>> ddc3705df1d2eaf96ba2775cc4bf733a6de189bc
     <div class="summary-grid">
       <div>
         <span class="label">영어 등급</span>
@@ -30,13 +39,19 @@
         <span class="value">{{ inq_avg | round(1) }}</span>
       </div>
     </div>
+    <p class="summary-text">{{ summary }}</p>
+  </div>
 
+<<<<<<< HEAD
     <p class="summary-text">{{ summary }}</p>
   </div>
 
   <!-- =====================
        전략 추천 카드
        ===================== -->
+=======
+  <!-- 추천 리스트 -->
+>>>>>>> ddc3705df1d2eaf96ba2775cc4bf733a6de189bc
   <div class="recommend-list">
     {% for r in recommends %}
     <div class="recommend-card {{ r.level }}">
@@ -53,11 +68,15 @@
 
 </div>
 
+<<<<<<< HEAD
 <!-- =====================
      재수종합학원 리스트
      ===================== -->
 <div class="list-container">
 
+=======
+<div class="list-container">
+>>>>>>> ddc3705df1d2eaf96ba2775cc4bf733a6de189bc
   <h1 class="page-title">재수종합학원</h1>
 
   <div class="tab">
@@ -66,6 +85,7 @@
 
   {% for r in results %}
   <div class="result-row">
+<<<<<<< HEAD
 
     <!-- 별 아이콘 -->
     <div class="star">☆</div>
@@ -74,17 +94,26 @@
     <div class="left">
       <div class="title">
         {{ r.selection }} / {{ r.track }}
+=======
+    <div class="left">
+      <div class="title">
+        {{ r.selection }}/{{ r.track }}
+>>>>>>> ddc3705df1d2eaf96ba2775cc4bf733a6de189bc
       </div>
       <div class="sub">
         {{ r.academy }}[{{ r.branch }}]
       </div>
     </div>
 
+<<<<<<< HEAD
     <!-- 오른쪽 상태 -->
+=======
+>>>>>>> ddc3705df1d2eaf96ba2775cc4bf733a6de189bc
     <div class="right">
       <span class="year">작년기준</span>
 
       {% if r.status == "가능" %}
+<<<<<<< HEAD
         <span class="status can">가능</span>
       {% elif r.status == "불가" %}
         <span class="status cant">불가</span>
@@ -101,3 +130,19 @@
 </div>
 
 {% endblock %}
+=======
+        <button class="btn can">가능</button>
+      {% elif r.status == "불가" %}
+        <button class="btn cant">불가</button>
+      {% elif r.status == "100%장학" %}
+        <button class="btn full">100%장학</button>
+      {% elif r.status == "50%장학" %}
+        <button class="btn half">50%장학</button>
+      {% endif %}
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+{% endblock %}
+>>>>>>> ddc3705df1d2eaf96ba2775cc4bf733a6de189bc
