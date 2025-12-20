@@ -26,3 +26,7 @@ school_major_map = {}
 for uni in jungsi_df["university"].unique():
     majors = jungsi_df[jungsi_df["university"] == uni]["major"].unique().tolist()
     school_major_map[uni] = majors
+
+#n수 관련 파일 로드
+aca = os.path.join(DATA_FOLDER, 'aca.csv')
+jang_df = pd.read_csv(os.path.join(DATA_FOLDER, 'g_jang.csv'))

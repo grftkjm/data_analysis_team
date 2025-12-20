@@ -19,6 +19,7 @@
   <!-- 정시 -->
   <p>
     <strong>정시(입력 성적)</strong> :
+    국어 :
     {% for k, v in result.jungsi.scores_keep.items() %}
       {{ k }} {{ v }}{% if not loop.last %}, {% endif %}
     {% endfor %}
@@ -97,9 +98,13 @@
   </ul>
 </section>
 <form action="{{ url_for('n_result.n_result') }}" method="POST">
+    <input type="hidden" name="kor_grade" value="{{ forRetry.kor_val }}">
+    <input type="hidden" name="math_grade" value="{{ forRetry.math_val }}">
     <input type="hidden" name="eng_grade" value="{{ forRetry.eng_val }}">
-    <input type="hidden" name="inq1_percent" value="{{ forRetry.inq1_val }}">
-    <input type="hidden" name="inq2_percent" value="{{ forRetry.inq2_val }}">
+    <input type="hidden" name="inq1_grade" value="{{ forRetry.inq1_val }}">
+    <input type="hidden" name="inq2_grade" value="{{ forRetry.inq2_val }}">
+    <input type="hidden" name="inq1_percent" value="{{ forRetry.inq1_val_percent }}">
+    <input type="hidden" name="inq2_percent" value="{{ forRetry.inq2_val_percent }}">
 
     <button type="submit">혹시 n수 생각이 있는 당신! 여기로 ㄱㄱ</button>
 </form>
