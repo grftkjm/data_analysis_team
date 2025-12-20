@@ -8,11 +8,14 @@ DATA_FOLDER = os.path.join(BASE_DIR, "data")
 jungsi_df = pd.read_csv(os.path.join(DATA_FOLDER, "jungsi_cut.csv"))
 hakjong_df = pd.read_csv(os.path.join(DATA_FOLDER, "hakjong_cut.csv"))
 
-# 생기부 CSV
+studentInfo = pd.read_csv(os.path.join(BASE_DIR, "data\\student_info.csv"))
+RanksDf = pd.read_csv(os.path.join(BASE_DIR, "data\\grades.csv"))
 
-setuk_df = pd.read_csv(os.path.join(DATA_FOLDER, "세부능력 종합 특기사항.csv"))
-changche_df = pd.read_csv(os.path.join(DATA_FOLDER, "창의적체험활동.csv"))
-haengteuk_df = pd.read_csv(os.path.join(DATA_FOLDER, "행동특성.csv"))
+
+# 생기부 CSV
+setuk_df = pd.read_csv(os.path.join(DATA_FOLDER, 'detailed_abilities.csv'))
+changche_df = pd.read_csv(os.path.join(DATA_FOLDER, 'creative_activities.csv'))
+haengteuk_df = pd.read_csv(os.path.join(DATA_FOLDER, 'behavioral_characteristics.csv'))
 
 #수시 컷
 susicut_df = pd.read_csv(os.path.join(DATA_FOLDER, "susicut.csv"))

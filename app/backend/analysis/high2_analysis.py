@@ -2,7 +2,7 @@ import matplotlib
 matplotlib.use('Agg')
 import pandas as pd
 import numpy as np
-from app.backend.analysis.RankAnalysisFunc import clearRanks, getRate
+from app.backend.analysis.RankAnalysisFunc import clearRanks, getRate, get_susi_students_above_avg
 import app.backend.analysis.getData as getData
 from scipy import stats # 통계 분석용
 import matplotlib.pyplot as plt
@@ -57,7 +57,7 @@ def get_weighted_total_rank(df):
     """
     grades_mean = {}
     for g in [1, 2, 3]:
-        g_data = df[df['grade'] == g]['rank'].replace('A', 1).replace('B', 2).to_numpy()
+        g_data = clearRanks(df[df['grade'] == g]['rank'].replace('A', 1).replace('B', 2).to_numpy())
         grades_mean[g] = np.mean(g_data) if len(g_data) > 0 else np.nan
     
     # 가중 합산 (데이터가 없는 학년 예외처리 필요)
@@ -88,18 +88,40 @@ def getRankWithSubject(df , subject):
         return clearRanks(df['rank'].to_numpy())
 
 
-def whereCanIGO(student, school, major):
+def whereCanIGO(student):
     """학생이 지원 가능한 대학 리스트 반환"""
-    getData.susicut_df['total'] = getData.susicut_df['교과 50%']*0.2\
-                                 + getData.susicut_df['교과 70%']*0.3\
-                                 + getData.susicut_df['학종 50%']*0.2\
-                                + getData.susicut_df['학종 70%']*0.3
+    
+    # 데이터 전처리 (벡터화 연산 활용)
+    df = getData.susicut_df.copy()
+    # 교과/학종 컷 평균 계산 (NaN 값은 0으로 처리하거나 적절히 제외)
+    df['university'] = df['학교']
+    df['avg_50'] = (df['교과 50%'] + df['학종 50%']) / 2
+    df['avg_70'] = (df['교과 70%'] + df['학종 70%']) / 2
+    
+    #학생 성적 계산
+    current_rank = np.mean(getRankWithSubject(student.grades, 'total'))
+    
+    # 상승할 성적 계산
+    happy_rank = current_rank * getRate(2, 2, 3, 1, 'total')
+    
     possible_schools = []
-    student_total_rank = getRankWithSubject(student.grades, 'total')*getRate(2,2,3,2, 'total')
-    for i in range(len(getData.susicut_df.loc.to_numpy())):
-        if getData.susicut_df.iloc[i]['total'] >= student_total_rank:
-            possible_schools.append(getData.susicut_df.iloc[i]['학교'])
-    return possible_schools
+    happy_possible_schools = []
+
+    for row in df.itertuples():
+        # 현재 성적으로 가능성 확인
+        prob_now = calculate_pass_probability(current_rank, row.avg_50, row.avg_70)
+        if prob_now >= 70:
+            possible_schools.append(row.university)
+            continue # 이미 합격권이면 '미래' 리스트에는 넣지 않음 (중복 방지)
+        # 성적 상승 시 가능성 확인
+        prob_future = calculate_pass_probability(happy_rank, row.avg_50, row.avg_70)
+        if prob_future >= 70:
+            happy_possible_schools.append(row.university)
+
+    return {
+        "current": possible_schools,
+        "future": happy_possible_schools
+    }
 
 
 def calculate_pass_probability(student_rank, cut_50, cut_70):
@@ -215,42 +237,156 @@ def plot_all_subjects_trend(student):
     
     return get_plot_base64()
 
+def analyze_setuk_opportunity(student):
+    df = getData.susicut_df.copy()
+    student_rank = np.mean(getRankWithSubject(student.grades, 'total'))
+    
+    def estimate_min_cut(fifty_cut, seventy_cut):
+        sigma = (seventy_cut - fifty_cut) / 0.524
+        return fifty_cut + (1.645 * sigma)
+    df['university'] = df['학교']
+    df['avg_50'] = df['학종 50%']
+    df['avg_70'] = df['학종 70%']
+    
+    # 딕셔너리 형태로 필요한 정보(대학명, 평균컷, 추정최저)를 담아 리턴하도록 수정
+    opportunity_schools = []
+    for row in df.itertuples():
+        min_cut = estimate_min_cut(row.avg_50, row.avg_70)
+        if row.avg_50 < student_rank <= min_cut:
+            opportunity_schools.append({
+                "university": row.university,
+                "avg_50": row.avg_50,
+                "min_cut": min_cut,
+                "major": getattr(row, 'major', '컴퓨터공학과') # 학과 정보가 있다면 가져옴
+            })
+            
+    return opportunity_schools
+
+
+def get_student_record_feedback(student) :
+    """
+    특정 학생의 세특을 분석하여 딕셔너리 형태의 피드백 리턴
+    """
+    keywords = [
+        "컴퓨터", "소프트웨어", "SW", "프로그래밍", "개발",
+        "코딩", "AI", "인공지능", "데이터", "알고리즘", "정보"
+    ]
+    target_ids = get_susi_students_above_avg(getData.studentInfo, getData.RanksDf, np.mean(getRankWithSubject(student.grades, 'total')))
+    dataframes = []
+    print(target_ids)
+    for i in range(len(target_ids)) :
+        dataframes.append(getData.setuk_df[getData.setuk_df['student_id'] == target_ids[i]])
+        dataframes.append(getData.changche_df[getData.changche_df['student_id'] == target_ids[i]])
+        dataframes.append(getData.haengteuk_df[getData.haengteuk_df['student_id'] == target_ids[i]])
+
+    student_df = []
+    student_df.append(student.creative_activities)
+    student_df.append(student.detailed_abilities)
+    student_df.append(student.behavioral_characteristics)
+
+
+    
+    def count_keywords_from_df_list(df_list):
+        keyword_total = {k: 0 for k in keywords}
+        doc_count = 0
+
+        for df in df_list:
+            if df is None or df.empty or "content" not in df.columns:
+                continue
+
+            for raw_text in df["content"].astype(str):
+                doc_count += 1
+
+                sentences = (
+                    raw_text.replace("!", ".")
+                            .replace("?", ".")
+                            .replace("\n", ".")
+                            .split(".")
+                )
+
+                for sentence in sentences:
+                    s = sentence.strip()
+                    if not s:
+                        continue
+
+                    for k in keywords:
+                        if k in s:
+                            keyword_total[k] += 1
+
+        return keyword_total, doc_count
+
+    #기준 DF 리스트 → 키워드 총합 & 문서 수
+    base_total, base_doc_count = count_keywords_from_df_list(dataframes)
+
+    #기준 평균 계산
+    if base_doc_count == 0:
+        base_avg = {k: 0 for k in keywords}
+    else:
+        base_avg = {
+            k: round(base_total[k] / len(target_ids), 1)
+            for k in keywords
+        }
+
+    # 학생 DF 리스트 → 키워드 등장 횟수
+    student_total, _ = count_keywords_from_df_list(student_df)
+    result = {}
+    for k in keywords:
+        avg_val = base_avg.get(k, 0)
+
+        # 평균 1회 이하 키워드는 제외
+        if avg_val <= 1:
+            continue
+
+        stu_val = student_total.get(k, 0)
+
+        result[k] = {
+            "avg": avg_val,
+            "student": stu_val,
+            "diff": round(stu_val - avg_val, 1)
+        }
+    return result
+
+
+
 def analyzing(student, school, major, jungsi_scores):
-    """
-    수시/정시 통합 분석 및 다중 그래프 생성 함수
-    """
-    # 0. 대학 데이터 기반 설정 (CSV 데이터 활용)
-    # getData.susicut_df에서 학교 정보를 찾아 50%, 70% 컷 산출
+    # 대학 데이터 기반 설정 (CSV 데이터 활용)
     school_row = getData.susicut_df[getData.susicut_df['학교'] == school]
     
     if not school_row.empty:
-        # 교과와 학종 컷의 평균을 분석 기준으로 설정
         target_cut_50 = (school_row['교과 50%'].values[0] + school_row['학종 50%'].values[0]) / 2
         target_cut_70 = (school_row['교과 70%'].values[0] + school_row['학종 70%'].values[0]) / 2
     else:
-        # 데이터가 없을 경우 기본값 (사용자 알림용)
         target_cut_50, target_cut_70 = 2.0, 3.0
 
-    # 1. 수시 성적 분석
+    # 기본 성적 분석
     current_ranks = getRankWithSubject(student.grades, 'total')
-    avg_susi_rank = np.mean(current_ranks) if len(current_ranks) > 0 else 0
+    avg_susi_rank = np.mean(current_ranks)
     volatility = analyze_student_volatility(current_ranks)
     
-    # 2. 정시 성적 분석 (전달받은 scores 활용)
-    # scores = {'kor': 3, 'math': 2, 'eng': 2, 'inq': 3.5} 형태
+    # 정시 성적 분석
     jungsi_values = [v for v in jungsi_scores.values() if v > 0]
     avg_jungsi_rank = np.mean(jungsi_values) if jungsi_values else 0
     
-    # 3. 그래프 1: 합격 확률 시뮬레이션 생성
-    plt.clf()  # 이전 그래프 잔상 제거
+    # 역전 가능 대학 리스트 및 세특 피드백 생성
+    # analyze_setuk_opportunity 함수 호출 (위에서 정의한 로직)
+
+    opportunity_schools = analyze_setuk_opportunity(student)
+    
+    opportunity_reports = []
+    for opp_school in opportunity_schools:
+        # 각 역전 가능 대학에 대한 세특 피드백 딕셔너리 생성
+        feedback_dict = analyze_setuk_opportunity(student)
+        opportunity_reports.append(feedback_dict)
+
+    # 4. 시각화 데이터 생성 (기존 로직)
+    plt.clf()
     plot_pass_simulation(avg_susi_rank, target_cut_50, target_cut_70)
-    pass_graph_base64 = get_plot_base64()  # 첫 번째 버퍼 작업 완료
+    pass_graph_base64 = get_plot_base64()
     
-    # 4. 그래프 2: 전과목 성적 추세 생성
-    plt.clf()  # 캔버스 초기화
-    trend_graph_base64 = plot_all_subjects_trend(student) # 내부에서 get_plot_base64 호출
+    plt.clf()
+    trend_graph_base64 = plot_all_subjects_trend(student)
     
-    # 5. 수시 vs 정시 전략 피드백
+    # 5. 전략 피드백 생성 (기존 로직)
     diff = avg_jungsi_rank - avg_susi_rank
     if avg_jungsi_rank == 0:
         strategy = "정시 데이터가 부족하여 수시 위주로 분석되었습니다."
@@ -261,7 +397,12 @@ def analyzing(student, school, major, jungsi_scores):
     else:
         strategy = "수시와 정시 성적이 균형적입니다. 최저학력기준 충족 여부가 관건입니다."
 
-    # 6. 최종 결과 딕셔너리 구성
+    if school == '상명대학교' :
+        keywordInfo = get_student_record_feedback(student=student)
+    else :
+        keywordInfo = []
+
+    # 6. 최종 통합 결과 딕셔너리
     analysis_result = {
         "student_info": {
             "name": student.name,
@@ -274,11 +415,15 @@ def analyzing(student, school, major, jungsi_scores):
             "volatility": volatility,
             "pass_probability": calculate_pass_probability(avg_susi_rank, target_cut_50, target_cut_70)
         },
+        "possibleStrategy" : keywordInfo,
+        "PossibleSchools" : whereCanIGO(student=student),
+        "opportunity_analysis": opportunity_reports, 
         "visual_data": {
-            "pass_graph": pass_graph_base64,    # 첫 번째 그래프 데이터
-            "trend_graph": trend_graph_base64  # 두 번째 그래프 데이터
+            "pass_graph": pass_graph_base64,
+            "trend_graph": trend_graph_base64
         },
-        "feedback": strategy
+        "feedback": strategy,
+        "targetschool" : school
     }
     
     return analysis_result

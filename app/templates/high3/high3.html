@@ -79,10 +79,6 @@
                 <input type="number" name="math_percent" min="0" max="100" class="score-input" required>
             </div>
             <div class="score-item">
-                <label class="label">영어</label>
-                <input type="number" name="eng_percent" min="0" max="100" class="score-input" required>
-            </div>
-            <div class="score-item">
                 <label class="label">탐구 1</label>
                 <input type="number" name="inq1_percent" min="0" max="100" class="score-input" required>
             </div>
@@ -124,6 +120,7 @@
     const fileNameDisplay = document.getElementById("file-name");
     const startBtn = document.getElementById("start-btn");
     const stickyBtn = document.getElementById("sticky-start-btn");
+    const loadingOverlay = document.getElementById("loading-overlay");
 
     schoolSelect.addEventListener("change", () => {
         majorSelect.innerHTML = '<option value="">학과 선택</option>';
@@ -153,6 +150,9 @@
         startBtn.disabled = true;
         stickyBtn.disabled = true;
         startBtn.textContent = stickyBtn.textContent = "분석 중...";
+        if (loadingOverlay) {
+            loadingOverlay.style.display = "flex";
+        }
     };
 </script>
 {% endblock %}

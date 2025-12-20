@@ -9,7 +9,7 @@ import tempfile
 
 #변수 설정
 API_KEY =  os.getenv("AI_API_KEY") # 본인 키 사용
-genai.configure(api_key="AIzaSyBAT1nIrO8gE-IGjjcCOLD5btDax5d1lNU", transport='rest')
+genai.configure(api_key="AIzaSyD6TVbEKqakhMz3xqYXrZews7wGXUru8Ig", transport='rest')
 MODEL_NAME = "gemini-2.5-flash" 
 
 #Student 클래스 정의

@@ -1,20 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ data.student_info.name }}님의 입시 분석 리포트</title>
+</head>
+<body>
+
 <div class="report-container">
-    <h1>{{ data.student_info.name }}님의 분석 리포트</h1>
+    <h1>분석 리포트</h1>
+    <div class="student-meta">
+        {{ data.student_info.school }} | {{ data.student_info.major }} 지원 희망 | <strong>{{ data.student_info.name }}</strong> 학생
+    </div>
     
-    <div class="summary-box">
-        <p>평균 등급: <strong>{{ data.score_analysis.average_rank }}</strong></p>
-        <p>성적 변동성: {{ data.score_analysis.volatility }}</p>
-        <p>합격 예상 확률: <span class="prob">{{ data.score_analysis.pass_probability }}%</span></p>
+    <div class="summary-grid">
+        <div class="summary-item">
+            <label>수시 평균 등급</label>
+            <span>{{ data.score_analysis.average_rank }}</span>
+        </div>
+        <div class="summary-item">
+            <label>성적 변동성 :</label>
+            <span>{{ data.score_analysis.volatility }}</span>
+        </div>
+        <div class="summary-item">
+            <label>합격 예상 확률</label>
+            <span class="prob-value">{{ data.score_analysis.pass_probability }}%</span>
+        </div>
     </div>
 
-    <h3>합격 확률 시뮬레이션</h3>
-    <h4>50%, 70%컷을 바탕으로 해당 학교 합격생들의 성적 분포를 계산하고, {{data.student_info.name}} 님의 위치와 합격 확률을 계산해 봤어요?</h4>
-    <img src="data:image/png;base64,{{ data.visual_data.pass_graph }}" alt="합격 분석 그래프">
-    <h4> </h4>
-    <img src="data:image/png;base64,{{ data.visual_data.trend_graph }}" alt="성적 추이 그래프">
-    
-    <div class="feedback">
-        <h4>전문가 조언</h4>
+    <div class="section-title">합격 확률 시뮬레이션</div>
+    <p class="graph-desc">대학별 50%, 70% 컷을 바탕으로 합격자 성적 분포(확률밀도함수)를 산출한 결과입니다. <b>초록색 영역</b>이 내 점수로 합격 가능한 구간입니다.</p>
+    <div class="graph-container">
+        <img src="data:image/png;base64,{{ data.visual_data.pass_graph }}" alt="합격 확률 시뮬레이션">
+    </div>
+
+    <div class="section-title">전과목 성적 추이 분석</div>
+    <p class="graph-desc">학년/학기별 성적 흐름을 통해 과목별 강점과 안정성을 분석합니다.</p>
+    <div class="graph-container">
+        <img src="data:image/png;base64,{{ data.visual_data.trend_graph }}" alt="성적 추이 그래프">
+    </div>
+
+    <div class="section-title"> 지원 가능 대학 리스트</div>
+    <div class="summary-box" style="background: white; border: 1px solid #eee;">
+        <table class="possible-table">
+            <thead>
+                <tr>
+                    <th>분류</th>
+                    <th>해당 대학교</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>현재 지원 가능</td>
+                    <td>{{ data.PossibleSchools.current | join(', ') }}</td>
+                </tr>
+                <tr>
+                    <td style="color: #27ae60;">성적 상승 시 가능</td>
+                    <td>{{ data.PossibleSchools.future | join(', ') }}</td>
+                </tr>
+                
+            </tbody>
+        </table>
+        <div>
+            
+            {% if data.possibleStrategy %}
+            <h4>세특 작성 전략</h4>
+                <h5> {{ data.student_info.name }}님 보다 성적이 낮지만 {{ data.targetschool}} 에 합격한 학생들의 생기부에는 {{ data.student_info.name }}님 생기부에 없는 아래 키워드가 있어요!</h5>
+                {% for k, info in data.possibleStrategy.items() %}
+                <p>
+                    {{ k }} :
+                    평균 {{ info.avg }}회 /
+                    내 생기부 {{ info.student }}회 →
+                    {% if info.diff > 0 %}
+                        평균보다 {{ info.diff }}회 더 등장
+                    {% elif info.diff < 0 %}
+                        평균보다 {{ info.diff | abs }}회 덜 등장
+                    {% else %}
+                        평균과 동일
+                    {% endif %}
+                </p>
+                {% endfor %}
+            {% endif %}
+
+
+
+        </div>
+    </div>
+
+    <div class="final-feedback">
+        <h4>🔍 종합 분석 결과</h4>
         <p>{{ data.feedback }}</p>
     </div>
 </div>
+
+</body>
+</html>

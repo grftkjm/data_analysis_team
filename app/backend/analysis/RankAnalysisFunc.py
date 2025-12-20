@@ -204,12 +204,70 @@ def getEachPersonRank(grade, semester, rankData, stuData, ismean=False):
         dicOfRanks[i] = eachRanks
 
     return pd.DataFrame(dicOfRanks)
-"""
-maxData = getSusiRank(3,2,ranks, studentInfo)
-x = ['50%', '70%', 'avg', 'max', 'min']
 
-y = [10, 20, 15]
 
-plt.bar(x, y)
-plt.show()
-"""
+def get_lowest_susi_student_id(student_df, grade_df, score):
+    """
+    수시 전형 학생 중 평균 등급 수치가 가장 큰(성적이 가장 낮은) 학생의 ID 리턴
+    """
+    #수시(is_susi == '수시') 학생들만 필터링
+    susi_students = student_df[student_df['is_susi'] == '수시']
+    
+    #성적 데이터 복사 및 전처리 (원본 데이터 보호)
+    susi_grades = grade_df[grade_df['student_id'].isin(susi_students['student_id'])].copy()
+    
+    susi_grades['rank_grade'] = susi_grades['rank_grade'].replace({'A': 1, 'B': 2, 'C': 3})
+    susi_grades['rank_grade'] = pd.to_numeric(susi_grades['rank_grade'], errors='coerce')
+    
+    # 학생별 평균 등급 계산 (nan 제외)
+    avg_grades = susi_grades.dropna(subset=['rank_grade']).groupby('student_id')['rank_grade'].mean()
+    
+    #모든 데이터가 NaN이라 계산 결과가 없는 경우 예외 처리
+    if avg_grades.empty:
+        return None
+    
+    #평균 등급 수치가 가장 큰(성적이 제일 낮은) 학생의 ID 추출
+    lowest_student_id = avg_grades.idxmax()
+    
+    return lowest_student_id
+
+def get_susi_students_above_avg(student_df, grade_df, threshold):
+    """
+    수시 전형 학생 중
+    평균 등급(rank_grade)이 threshold보다 큰 학생들의 student_id 리스트 반환
+    """
+
+    # 1. 수시 학생만 필터링
+    susi_students = student_df[student_df['is_susi'] == '수시']
+
+    # 2. 해당 학생들의 성적만 추출
+    susi_grades = grade_df[
+        grade_df['student_id'].isin(susi_students['student_id'])
+    ].copy()
+
+    # 3. 등급 문자 → 숫자 변환
+    susi_grades['rank_grade'] = susi_grades['rank_grade'].replace({
+        'A': 1,
+        'B': 2,
+        'C': 3
+    })
+    susi_grades['rank_grade'] = pd.to_numeric(
+        susi_grades['rank_grade'], errors='coerce'
+    )
+
+    # 4. 학생별 평균 등급 계산 (NaN 제외)
+    avg_grades = (
+        susi_grades
+        .dropna(subset=['rank_grade'])
+        .groupby('student_id')['rank_grade']
+        .mean()
+    )
+
+    # 5. 계산 결과가 없으면 빈 리스트 반환
+    if avg_grades.empty:
+        return []
+
+    # 6. 기준값 초과 학생 필터링
+    result_ids = avg_grades[avg_grades > threshold].index.tolist()
+
+    return result_ids

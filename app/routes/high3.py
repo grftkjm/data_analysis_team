@@ -32,7 +32,7 @@ def high3_result():
     jungsi_scores = {
         "kor": int(request.form.get("kor_percent")),
         "math": int(request.form.get("math_percent")),
-        "eng": int(request.form.get("eng_percent")),
+        "eng": int(request.form.get("eng_grade")),
         "inq1": int(request.form.get("inq1_percent")),
         "inq2": int(request.form.get("inq2_percent")),
     }
